@@ -470,16 +470,17 @@ function Newsletter({ settings }: { settings: SiteSettings }) {
     <section className="container-shell newsletter">
       <div>
         <span className="eyebrow eyebrow-light">Originally Club</span>
-        <h2>Receba novidades da fabrica primeiro.</h2>
+        <h2>Participe do Nosso Grupo do WhatsApp</h2>
+        <p>Novidades, promocoes exclusivas e mais!</p>
       </div>
       <a
-        href={buildWhatsAppUrl(settings.whatsapp_number, "Oi! Quero receber novidades da Originally.")}
+        href={buildWhatsAppUrl(settings.whatsapp_number, "Oi! Quero entrar no grupo do WhatsApp da Originally.")}
         target="_blank"
         rel="noreferrer"
         className="btn btn-mint"
       >
         <Mail size={18} />
-        Entrar na lista
+        Entrar no Grupo
       </a>
     </section>
   );
