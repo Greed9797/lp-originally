@@ -88,7 +88,7 @@ function Hero({
 
   if (banner) {
     return (
-      <section className="container-shell hero hero-banner-mode" aria-label="Originally">
+      <section className="hero hero-banner-mode" aria-label="Originally">
         <FullHeroBanner banner={banner} />
       </section>
     );
