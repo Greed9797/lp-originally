@@ -60,9 +60,15 @@ export async function saveSettingsAction(formData: FormData) {
     { key: "whatsapp_button_label", value: String(formData.get("whatsapp_button_label") || "") },
   ];
   const { error } = await supabase.from("site_settings").upsert(rows);
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (isSupabaseSchemaCacheError(error)) {
+      redirect("/admin/configuracoes?status=supabase-schema");
+    }
+    redirect("/admin/configuracoes?status=error");
+  }
   revalidatePath("/");
   revalidatePath("/admin/configuracoes");
+  redirect("/admin/configuracoes?status=saved");
 }
 
 export async function saveHomeSlotsAction(formData: FormData) {
@@ -160,4 +166,8 @@ function parseVariants(raw: string): Array<Pick<ProductVariant, "size" | "color"
   } catch {
     return [];
   }
+}
+
+function isSupabaseSchemaCacheError(error: { code?: string; message?: string }) {
+  return error.code === "PGRST205" || error.message?.includes("schema cache");
 }
