@@ -6,6 +6,7 @@ const nav = [
   ["Produtos", "/admin/produtos"],
   ["Categorias", "/admin/categorias"],
   ["Vitrines", "/admin/vitrines"],
+  ["Importacao", "/admin/importacao"],
   ["Configuracoes", "/admin/configuracoes"],
 ];
 

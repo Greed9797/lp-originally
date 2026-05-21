@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { hasSupabaseEnv } from "./supabase/env";
 import { createSupabaseServerClient } from "./supabase/server";
 import { sampleCategories, sampleHomeSlots, sampleProducts, sampleSettings } from "./sample-data";
-import type { Category, HomeSlot, Product, ProductImage, ProductVariant, SiteSettings } from "./types";
+import type { Category, HomeSlot, ImportRun, Product, ProductImage, ProductVariant, SiteSettings } from "./types";
 
 type ProductRow = Omit<Product, "category" | "images" | "variants"> & {
   categories?: Category | Category[] | null;
@@ -25,10 +25,11 @@ function normalizeProduct(row: ProductRow): Product {
 
 const productSelect = `
   id, category_id, name, slug, short_description, description, price_cents,
-  whatsapp_message, badge, status, featured, created_at, updated_at,
-  categories(id,name,slug,description,sort_order),
-  product_images(id,product_id,url,alt,storage_path,order_index),
-  product_variants(id,product_id,size,color,stock,price_cents,active)
+  whatsapp_message, badge, status, featured, source_platform, source_id, source_url,
+  last_imported_at, metadata, created_at, updated_at,
+  categories(id,name,slug,description,image_url,banner_url,source_platform,source_id,source_url,last_imported_at,sort_order),
+  product_images(id,product_id,url,alt,storage_path,source_url,content_hash,last_imported_at,order_index),
+  product_variants(id,product_id,size,color,stock,price_cents,active,source_id,source_code,metadata)
 `;
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
@@ -105,4 +106,17 @@ export const getHomeSlots = cache(async (): Promise<HomeSlot[]> => {
     sort_order: slot.sort_order,
     product: slot.products ? normalizeProduct((Array.isArray(slot.products) ? slot.products[0] : slot.products) as unknown as ProductRow) : null,
   })) as HomeSlot[];
+});
+
+export const getImportRuns = cache(async (limit = 10): Promise<ImportRun[]> => {
+  if (!hasSupabaseEnv()) return [];
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("import_runs")
+    .select("*")
+    .order("started_at", { ascending: false })
+    .limit(limit);
+
+  if (error || !data) return [];
+  return data as ImportRun[];
 });

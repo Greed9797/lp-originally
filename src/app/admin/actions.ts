@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { parseCurrencyToCents, slugify } from "@/lib/format";
 import { requireAdmin } from "@/lib/auth";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { fetchMercosCatalog, normalizeMercosCatalog } from "@/lib/import/originally";
+import { importCatalogToSupabase } from "@/lib/import/supabase";
+import { hasServiceRoleEnv } from "@/lib/supabase/env";
+import { createSupabaseServerClient, createSupabaseServiceClient } from "@/lib/supabase/server";
 import { normalizeProductInput } from "@/lib/validation";
 import type { ProductVariant } from "@/lib/types";
 
@@ -90,6 +93,33 @@ export async function saveHomeSlotsAction(formData: FormData) {
   }
   revalidatePath("/");
   revalidatePath("/admin/vitrines");
+}
+
+export async function runOriginallyImportAction(formData: FormData) {
+  await requireAdmin();
+  if (!hasServiceRoleEnv()) redirect("/admin/importacao?status=missing-service-role");
+
+  const uploadImages = formData.get("upload_images") === "on";
+  try {
+    const raw = await fetchMercosCatalog({
+      token: process.env.MERCOS_B2B_TOKEN,
+      cookie: process.env.MERCOS_B2B_COOKIE,
+    });
+    const catalog = normalizeMercosCatalog(raw);
+    const supabase = createSupabaseServiceClient();
+    const result = await importCatalogToSupabase({ supabase, catalog, uploadImages });
+    revalidatePath("/");
+    revalidatePath("/admin");
+    revalidatePath("/admin/importacao");
+    revalidatePath("/admin/produtos");
+    revalidatePath("/admin/categorias");
+    redirect(
+      `/admin/importacao?status=${result.errors.length ? "partial" : "imported"}&products=${result.productsImported}&images=${result.imagesUploaded}`,
+    );
+  } catch (error) {
+    console.error("Originally import failed:", error instanceof Error ? error.message : "unknown error");
+    redirect("/admin/importacao?status=error");
+  }
 }
 
 export async function saveProductAction(formData: FormData) {
