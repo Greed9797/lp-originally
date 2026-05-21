@@ -11,6 +11,18 @@ export async function getCurrentAdmin() {
 
   if (!user?.email) return null;
 
+  const configuredAdminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  if (configuredAdminEmail && user.email.toLowerCase() === configuredAdminEmail) {
+    return {
+      user,
+      profile: {
+        id: user.id,
+        email: user.email,
+        role: "owner",
+      },
+    };
+  }
+
   const { data: profile } = await supabase
     .from("admin_profiles")
     .select("id,email,role")
