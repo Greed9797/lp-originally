@@ -31,6 +31,14 @@
   --ink-300: var(--tan);
   --background: var(--blush-100);
   --foreground: var(--ink-900);
+  --type-h1: clamp(2.5rem, 5vw, 4rem);
+  --type-h2: clamp(1.75rem, 3.5vw, 2.75rem);
+  --type-h3: clamp(1rem, 2vw, 1.25rem);
+  --type-body: clamp(0.875rem, 1.5vw, 1rem);
+  --type-label: 0.6875rem;
+  --type-caption: 0.75rem;
+  --type-button: 0.875rem;
+  --type-price: 1rem;
 }
 
 @theme inline {
@@ -52,7 +60,59 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--type-body);
+  font-weight: 400;
+  line-height: 1.65;
   overflow-x: hidden;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: var(--type-h1);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: var(--type-h2);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+h3 {
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--type-h3);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
+}
+
+h4 {
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+p {
+  color: #5a4f44;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--type-body);
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+small,
+.caption {
+  font-size: var(--type-caption);
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 a {
@@ -93,7 +153,9 @@ select {
   gap: 0.55rem;
   border-radius: 999px;
   padding: 0.82rem 1.15rem;
-  font-weight: 800;
+  font-size: var(--type-button);
+  font-weight: 600;
+  letter-spacing: 0.03em;
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
@@ -147,9 +209,9 @@ select {
   padding: 0.45rem 1rem;
   background: var(--toffee-800);
   color: var(--blush-50);
-  font-size: 0.74rem;
-  font-weight: 900;
-  letter-spacing: 0.11em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -180,7 +242,7 @@ select {
 .brand-lockup {
   font-family: var(--font-display), Georgia, serif;
   color: var(--toffee-800);
-  font-size: clamp(2rem, 4vw, 3.1rem);
+  font-size: clamp(1.9rem, 3.6vw, 2.7rem);
   font-style: italic;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -199,9 +261,9 @@ select {
 .nav-links {
   gap: 1.35rem;
   color: var(--ink-700);
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -240,8 +302,9 @@ select {
   background: var(--toffee-800);
   color: var(--paper-2);
   cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 900;
+  font-size: var(--type-button);
+  font-weight: 600;
+  letter-spacing: 0.03em;
   padding: 0 1rem;
 }
 
@@ -326,9 +389,9 @@ select {
   align-items: center;
   gap: 0.45rem;
   color: var(--mint-ink);
-  font-size: 0.72rem;
-  font-weight: 950;
-  letter-spacing: 0.16em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -342,10 +405,10 @@ select {
   max-width: 560px;
   margin-top: 1.35rem;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(2.35rem, 4.15vw, 4.35rem);
+  font-size: var(--type-h1);
   font-weight: 700;
-  letter-spacing: 0;
-  line-height: 0.98;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   text-wrap: balance;
 }
 
@@ -355,7 +418,7 @@ select {
   max-width: 560px;
   margin-top: 1.45rem;
   color: rgba(255, 255, 255, 0.78);
-  font-size: clamp(1rem, 1.45vw, 1.18rem);
+  font-size: var(--type-body);
   line-height: 1.65;
 }
 
@@ -391,15 +454,15 @@ select {
 .hero-stat strong {
   display: block;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.75rem, 3vw, 2.8rem);
-  line-height: 1;
+  font-size: var(--type-h2);
+  line-height: 1.15;
 }
 
 .hero-stat span {
   display: block;
   margin-top: 0.25rem;
   color: rgba(255, 255, 255, 0.62);
-  font-size: 0.78rem;
+  font-size: var(--type-caption);
 }
 
 .hero-right {
@@ -446,8 +509,8 @@ select {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.9);
   color: var(--toffee-800);
-  font-size: 0.72rem;
-  font-weight: 900;
+  font-size: var(--type-caption);
+  font-weight: 600;
   padding: 0.48rem 0.75rem;
   white-space: nowrap;
   overflow: hidden;
@@ -475,9 +538,9 @@ select {
   background: var(--sage);
   color: var(--blush-50);
   padding: 0.75rem 1rem;
-  font-size: 0.78rem;
-  font-weight: 950;
-  letter-spacing: 0.08em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   box-shadow: 0 18px 34px rgba(110, 122, 90, 0.24);
 }
@@ -500,8 +563,8 @@ select {
   gap: 0.55rem;
   padding: 1rem 1.6rem;
   color: var(--toffee-800);
-  font-size: 0.8rem;
-  font-weight: 950;
+  font-size: var(--type-label);
+  font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -536,10 +599,10 @@ select {
   margin-top: 0.55rem;
   color: var(--toffee-800);
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(2.05rem, 4.1vw, 3.85rem);
+  font-size: var(--type-h2);
   font-weight: 700;
-  letter-spacing: 0;
-  line-height: 1;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
 }
 
 .section-side {
@@ -550,9 +613,9 @@ select {
 .section-action {
   margin-top: 1rem;
   color: var(--toffee-800);
-  font-size: 0.86rem;
-  font-weight: 950;
-  letter-spacing: 0.08em;
+  font-size: var(--type-button);
+  font-weight: 600;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
@@ -569,9 +632,9 @@ select {
   background: rgba(255, 255, 255, 0.62);
   color: var(--ink-700);
   padding: 0.65rem 1rem;
-  font-size: 0.78rem;
-  font-weight: 950;
-  letter-spacing: 0.08em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -625,9 +688,9 @@ select {
   background: var(--mint);
   color: var(--blush-50);
   padding: 0.42rem 0.7rem;
-  font-size: 0.68rem;
-  font-weight: 950;
-  letter-spacing: 0.08em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -664,19 +727,19 @@ select {
 .product-kicker {
   display: block;
   color: var(--mint-ink);
-  font-size: 0.68rem;
-  font-weight: 950;
-  letter-spacing: 0.13em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .product-body h3 {
   margin-top: 0.35rem;
   color: var(--toffee-800);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--type-h3);
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .product-body p {
@@ -684,8 +747,8 @@ select {
   margin-top: 0.55rem;
   overflow: hidden;
   color: var(--ink-500);
-  font-size: 0.87rem;
-  line-height: 1.5;
+  font-size: 0.875rem;
+  line-height: 1.65;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
@@ -701,8 +764,8 @@ select {
 
 .product-bottom strong {
   color: var(--ink-900);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.75rem;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--type-price);
   font-weight: 700;
 }
 
@@ -747,8 +810,8 @@ select {
   max-width: 620px;
   margin-top: 1.35rem;
   color: var(--ink-500);
-  font-size: 1.04rem;
-  line-height: 1.75;
+  font-size: var(--type-body);
+  line-height: 1.65;
 }
 
 .collection-actions {
@@ -763,9 +826,9 @@ select {
   background: rgba(255, 255, 255, 0.9);
   color: var(--toffee-800);
   padding: 0.72rem 1rem;
-  font-size: 0.78rem;
-  font-weight: 950;
-  letter-spacing: 0.1em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   box-shadow: 0 14px 30px rgba(88, 53, 26, 0.12);
 }
@@ -823,9 +886,9 @@ select {
   border-radius: 999px;
   background: var(--paper-3);
   color: var(--espresso);
-  font-size: 0.78rem;
-  font-weight: 950;
-  letter-spacing: 0.08em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
 }
 
 .review-media img {
@@ -837,7 +900,7 @@ select {
 .process-index {
   color: rgba(88, 53, 26, 0.16);
   font-family: var(--font-display), Georgia, serif;
-  font-size: 3rem;
+  font-size: var(--type-h2);
   font-weight: 700;
   line-height: 1;
 }
@@ -857,9 +920,10 @@ select {
 .process-card h3 {
   margin-top: 1rem;
   color: var(--toffee-800);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 2rem;
-  line-height: 1;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--type-h3);
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .process-card p,
@@ -885,8 +949,8 @@ select {
   display: block;
   margin-top: 0.25rem;
   color: var(--ink-500);
-  font-size: 0.78rem;
-  font-weight: 850;
+  font-size: var(--type-caption);
+  font-weight: 400;
 }
 
 .instagram-strip,
@@ -999,18 +1063,18 @@ select {
 }
 
 .footer-benefit strong {
-  font-size: 0.92rem;
-  font-weight: 950;
-  letter-spacing: 0.06em;
+  font-size: var(--type-button);
+  font-weight: 600;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
 .footer-benefit span {
   max-width: 300px;
   color: rgba(42, 27, 14, 0.66);
-  font-size: 0.9rem;
-  font-weight: 700;
-  line-height: 1.45;
+  font-size: var(--type-caption);
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .footer-main {
@@ -1032,15 +1096,15 @@ select {
 
 .footer-brand-block .footer-brand {
   color: var(--toffee-800);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.9rem, 3.6vw, 2.7rem);
 }
 
 .footer-brand-block p,
 .footer-note {
   color: rgba(42, 27, 14, 0.66);
-  font-size: 0.9rem;
-  font-weight: 700;
-  line-height: 1.55;
+  font-size: var(--type-caption);
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .footer-phone {
@@ -1055,9 +1119,9 @@ select {
 .footer-title {
   margin-bottom: 1.35rem;
   color: var(--ink-900);
-  font-size: 0.92rem;
-  font-weight: 950;
-  letter-spacing: 0.06em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -1065,7 +1129,8 @@ select {
   display: grid;
   gap: 0.9rem;
   color: rgba(42, 27, 14, 0.66);
-  font-weight: 800;
+  font-size: var(--type-caption);
+  font-weight: 400;
 }
 
 .footer-link-list a:hover,
@@ -1093,15 +1158,15 @@ select {
 
 .trust-card strong {
   color: var(--ink-900);
-  font-size: 0.86rem;
-  font-weight: 950;
-  letter-spacing: 0.02em;
+  font-size: var(--type-caption);
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
 .trust-card span {
   color: rgba(42, 27, 14, 0.58);
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: var(--type-caption);
+  font-weight: 400;
 }
 
 .trust-card-wide {
@@ -1130,9 +1195,9 @@ select {
   border-radius: 8px;
   background: #fff;
   color: var(--ink-900);
-  font-size: 0.78rem;
-  font-weight: 950;
-  letter-spacing: 0.06em;
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -1152,8 +1217,8 @@ select {
   gap: 1.5rem;
   min-height: 74px;
   color: rgba(42, 27, 14, 0.62);
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-size: var(--type-caption);
+  font-weight: 400;
 }
 
 .footer-social {
@@ -1624,7 +1689,7 @@ select {
   }
 
   .hero-title {
-    font-size: clamp(2.2rem, 10.5vw, 3.2rem);
+    font-size: clamp(2.5rem, 10vw, 3.4rem);
   }
 
   .hero-stats {
@@ -1656,7 +1721,7 @@ select {
   .collection-copy h2,
   .instagram-strip h2,
   .newsletter h2 {
-    font-size: clamp(2rem, 9.5vw, 2.9rem);
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
   }
 
   .collection-art {

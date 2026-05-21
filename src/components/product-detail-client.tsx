@@ -40,14 +40,14 @@ export function ProductDetailClient({ product, settings }: { product: Product; s
       </div>
 
       <section className="rounded-[28px] bg-white p-6 shadow-[0_16px_42px_rgba(80,40,30,0.08)] lg:p-8">
-        <div className="text-xs font-black uppercase tracking-[0.14em] text-[var(--mint-ink)]">{product.category?.name || "Originally"}</div>
-        <h1 className="brand-display mt-3 text-4xl leading-none text-[var(--toffee-800)] md:text-6xl">{product.name}</h1>
-        <p className="mt-5 text-lg text-[var(--ink-500)]">{product.short_description}</p>
-        <div className="brand-display mt-6 text-4xl font-semibold text-[var(--ink-900)]">{formatPrice(price)}</div>
+        <div className="text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-[var(--mint-ink)]">{product.category?.name || "Originally"}</div>
+        <h1 className="brand-display mt-3 text-[clamp(2.5rem,5vw,4rem)] leading-[1.1] tracking-[-0.02em] text-[var(--toffee-800)]">{product.name}</h1>
+        <p className="mt-5 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.65] text-[var(--ink-500)]">{product.short_description}</p>
+        <div className="mt-6 text-base font-bold text-[var(--ink-900)]">{formatPrice(price)}</div>
 
         {activeVariants.length ? (
           <div className="mt-8">
-            <div className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[var(--ink-500)]">Escolha tamanho e cor</div>
+            <div className="mb-3 text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-[var(--ink-500)]">Escolha tamanho e cor</div>
             <div className="grid gap-3 sm:grid-cols-2">
               {activeVariants.map((variant) => (
                 <VariantButton
@@ -73,7 +73,7 @@ export function ProductDetailClient({ product, settings }: { product: Product; s
         </a>
 
         <div className="mt-8 border-t border-[var(--blush-200)] pt-6">
-          <h2 className="brand-display text-2xl text-[var(--toffee-800)]">Descricao</h2>
+          <h2 className="brand-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.15] tracking-[-0.01em] text-[var(--toffee-800)]">Descricao</h2>
           <p className="mt-3 whitespace-pre-line text-[var(--ink-700)]">{product.description}</p>
         </div>
       </section>

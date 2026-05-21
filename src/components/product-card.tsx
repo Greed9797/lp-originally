@@ -22,7 +22,7 @@ export function ProductCard({ product, settings, compact = false }: { product: P
             </div>
           )}
           {product.badge ? (
-            <span className="absolute left-4 top-4 rounded-full bg-[var(--mint)] px-3 py-1 text-xs font-black text-[var(--toffee-800)]">
+            <span className="absolute left-4 top-4 rounded-full bg-[var(--mint)] px-3 py-1 text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-[var(--toffee-800)]">
               {product.badge}
             </span>
           ) : null}
@@ -34,16 +34,16 @@ export function ProductCard({ product, settings, compact = false }: { product: P
         </div>
       </Link>
       <div className={compact ? "p-4" : "p-5"}>
-        <div className="mb-2 text-xs font-black uppercase tracking-[0.12em] text-[var(--mint-ink)]">
+        <div className="mb-2 text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-[var(--mint-ink)]">
           {product.category?.name || "Originally"}
         </div>
         <Link href={`/produto/${product.slug}`}>
-          <h3 className="brand-display text-2xl leading-tight text-[var(--toffee-800)]">{product.name}</h3>
+          <h3 className="text-[clamp(1rem,2vw,1.25rem)] font-semibold leading-[1.3] text-[var(--toffee-800)]">{product.name}</h3>
         </Link>
-        <p className="mt-2 line-clamp-2 text-sm text-[var(--ink-500)]">{product.short_description || product.description}</p>
+        <p className="mt-2 line-clamp-2 text-sm leading-[1.65] text-[var(--ink-500)]">{product.short_description || product.description}</p>
         <div className="mt-4 flex items-center justify-between gap-3">
-          <strong className="brand-display text-2xl font-semibold text-[var(--ink-900)]">{formatPrice(product.price_cents)}</strong>
-          <Link href={`/produto/${product.slug}`} className="inline-flex items-center gap-1 text-sm font-black text-[var(--toffee-800)]">
+          <strong className="text-base font-bold text-[var(--ink-900)]">{formatPrice(product.price_cents)}</strong>
+          <Link href={`/produto/${product.slug}`} className="inline-flex items-center gap-1 text-sm font-semibold tracking-[0.03em] text-[var(--toffee-800)]">
             Detalhes <ArrowRight size={14} />
           </Link>
         </div>

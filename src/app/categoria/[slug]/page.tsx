@@ -13,9 +13,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <Link href="/" className="inline-flex items-center gap-2 text-sm font-black text-[var(--toffee-800)]">
           <ArrowLeft size={16} /> Voltar para a loja
         </Link>
-        <span className="mt-10 block text-xs font-black uppercase tracking-[0.16em] text-[var(--mint-ink)]">Categoria</span>
-        <h1 className="brand-display mt-2 text-5xl text-[var(--toffee-800)]">{category.name}</h1>
-        <p className="mt-3 max-w-2xl text-[var(--ink-500)]">{category.description}</p>
+        <span className="mt-10 block text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-[var(--mint-ink)]">Categoria</span>
+        <h1 className="brand-display mt-2 text-[clamp(2.5rem,5vw,4rem)] leading-[1.1] tracking-[-0.02em] text-[var(--toffee-800)]">{category.name}</h1>
+        <p className="mt-3 max-w-2xl text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.65] text-[var(--ink-500)]">{category.description}</p>
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => <ProductCard key={product.id} product={product} settings={settings} />)}
         </div>
