@@ -65,7 +65,8 @@ function StoreHeader({ settings }: { settings: SiteSettings }) {
     <header className="site-header">
       <div className="container-shell site-nav">
         <Link href="/" className="brand-lockup" aria-label="Originally home">
-          originally
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/originally-logo.svg" alt="Originally" />
         </Link>
         <form className="site-search" action="/" role="search">
           <Search size={18} />
@@ -116,7 +117,8 @@ function StoreFooter({ settings }: { settings: SiteSettings }) {
         <div className="container-shell footer-columns">
           <div className="footer-brand-block">
             <Link href="/" className="brand-lockup footer-brand">
-              originally
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/originally-logo.svg" alt="Originally" />
             </Link>
             <p>Fabrica propria de produtos para caes e gatos, com sede em Erechim/RS desde 2002.</p>
             <a

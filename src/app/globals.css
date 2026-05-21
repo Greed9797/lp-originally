@@ -240,6 +240,8 @@ select {
 }
 
 .brand-lockup {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-display), Georgia, serif;
   color: var(--toffee-800);
   font-size: clamp(1.9rem, 3.6vw, 2.7rem);
@@ -247,6 +249,16 @@ select {
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1;
+}
+
+.brand-lockup img {
+  display: block;
+  width: clamp(132px, 13vw, 178px);
+  height: auto;
+}
+
+.footer-brand img {
+  width: clamp(150px, 15vw, 210px);
 }
 
 .nav-links,
@@ -347,9 +359,14 @@ select {
   box-shadow: none;
 }
 
+.hero-banner picture,
 .hero-banner img {
+  display: block;
   width: 100%;
   height: 100%;
+}
+
+.hero-banner img {
   object-fit: cover;
   object-position: center;
 }
@@ -1699,7 +1716,7 @@ select {
   .hero-banner {
     min-height: 300px;
     border-radius: 0;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 941 / 1672;
   }
 
   .hero-banner img {

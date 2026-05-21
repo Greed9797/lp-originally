@@ -59,6 +59,7 @@ export default async function Home() {
 
 type HeroBannerConfig = {
   imageUrl: string;
+  mobileImageUrl: string;
   alt: string;
   href?: string;
 };
@@ -68,6 +69,7 @@ function getHeroBanner(): HeroBannerConfig | null {
 
   return {
     imageUrl,
+    mobileImageUrl: process.env.NEXT_PUBLIC_HOME_HERO_MOBILE_BANNER_URL?.trim() || "/originally-toffee-hero-mobile.png",
     alt: process.env.NEXT_PUBLIC_HOME_HERO_BANNER_ALT?.trim() || "Colecao Toffee Originally Pet",
     href: process.env.NEXT_PUBLIC_HOME_HERO_BANNER_HREF?.trim() || "#produtos",
   };
@@ -146,8 +148,10 @@ function FullHeroBanner({ banner }: { banner: HeroBannerConfig }) {
   const bannerContent = (
     <>
       <span className="sr-only">Originally Pet</span>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={banner.imageUrl} alt={banner.alt} />
+      <picture>
+        <source media="(max-width: 760px)" srcSet={banner.mobileImageUrl} />
+        <img src={banner.imageUrl} alt={banner.alt} />
+      </picture>
     </>
   );
 
