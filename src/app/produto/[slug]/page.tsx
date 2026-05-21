@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getProductBySlug, getSettings } from "@/lib/data";
 import { ProductDetailClient } from "@/components/product-detail-client";
-import { WhatsAppFloating } from "@/components/whatsapp-floating";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -26,7 +25,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </Link>
       </div>
       <ProductDetailClient product={product} settings={settings} />
-      <WhatsAppFloating settings={settings} />
     </main>
   );
 }

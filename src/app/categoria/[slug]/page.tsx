@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getProductsByCategory, getSettings } from "@/lib/data";
 import { ProductCard } from "@/components/product-card";
-import { WhatsAppFloating } from "@/components/whatsapp-floating";
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -21,7 +20,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           {products.map((product) => <ProductCard key={product.id} product={product} settings={settings} />)}
         </div>
       </section>
-      <WhatsAppFloating settings={settings} />
     </main>
   );
 }

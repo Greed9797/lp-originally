@@ -7,12 +7,10 @@ import {
   Mail,
   MessageCircle,
   PawPrint,
-  Search,
   ShieldCheck,
   Sparkles,
   Star,
 } from "lucide-react";
-import { WhatsAppFloating } from "@/components/whatsapp-floating";
 import { formatPrice } from "@/lib/format";
 import { buildProductMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { getCategories, getHomeSlots, getProducts, getSettings } from "@/lib/data";
@@ -42,19 +40,11 @@ export default async function Home() {
   const displayFeatured = uniqueProducts([...featuredProducts, ...products.filter((product) => product.featured), ...products]).slice(0, 4);
   const displayNews = uniqueProducts([...newestProducts, ...products]).slice(0, 4);
   const heroGallery = [heroProduct, collectionProduct, ...displayFeatured].filter(isProduct).slice(0, 4);
-  const homeHeroBannerUrl = process.env.NEXT_PUBLIC_HOME_HERO_BANNER_URL?.trim();
-  const homeHeroBannerAlt = process.env.NEXT_PUBLIC_HOME_HERO_BANNER_ALT?.trim() || "Colecao Toffee Originally Pet";
-  const homeHeroBannerHref = process.env.NEXT_PUBLIC_HOME_HERO_BANNER_HREF?.trim() || "#produtos";
+  const heroBanner = getHeroBanner();
 
   return (
     <main className="storefront">
-      <PromoBar />
-      <SiteNav settings={settings} />
-      {homeHeroBannerUrl ? (
-        <HomeHeroBanner src={homeHeroBannerUrl} alt={homeHeroBannerAlt} href={homeHeroBannerHref} settings={settings} />
-      ) : (
-        <Hero product={heroProduct} gallery={heroGallery} settings={settings} />
-      )}
+      <Hero product={heroProduct} gallery={heroGallery} settings={settings} banner={heroBanner} />
       <Marquee />
       <ProductsSection products={displayFeatured} categories={categories} settings={settings} />
       <CollectionFeature product={collectionProduct} settings={settings} />
@@ -63,88 +53,63 @@ export default async function Home() {
       <NewsSection products={displayNews} settings={settings} />
       <InstagramStrip />
       <Newsletter settings={settings} />
-      <StoreFooter settings={settings} />
-      <WhatsAppFloating settings={settings} />
     </main>
   );
 }
 
-function HomeHeroBanner({ src, alt, href, settings }: { src: string; alt: string; href: string; settings: SiteSettings }) {
-  return (
-    <section className="home-hero-banner" aria-label="Colecao Originally">
-      <a className="home-hero-banner-link" href={href}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt={alt} />
-      </a>
-      <a
-        href={buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)}
-        target="_blank"
-        rel="noreferrer"
-        className="home-hero-whatsapp"
-      >
-        Comprar pelo WhatsApp <ArrowRight size={18} />
-      </a>
-    </section>
-  );
+type HeroBannerConfig = {
+  imageUrl: string;
+  alt: string;
+  href?: string;
+};
+
+function getHeroBanner(): HeroBannerConfig | null {
+  const imageUrl = process.env.NEXT_PUBLIC_HOME_HERO_BANNER_URL?.trim();
+
+  if (!imageUrl) {
+    return null;
+  }
+
+  return {
+    imageUrl,
+    alt: process.env.NEXT_PUBLIC_HOME_HERO_BANNER_ALT?.trim() || "Banner Originally Pet",
+    href: process.env.NEXT_PUBLIC_HOME_HERO_BANNER_HREF?.trim() || undefined,
+  };
 }
 
-function PromoBar() {
-  return (
-    <div className="promo-bar">
-      <span>Frete gratis Brasil acima de R$ 299</span>
-      <span className="promo-dot" />
-      <span>Bordado personalizado em pequenos lotes</span>
-    </div>
-  );
-}
-
-function SiteNav({ settings }: { settings: SiteSettings }) {
-  return (
-    <header className="site-header">
-      <div className="container-shell site-nav">
-        <Link href="/" className="brand-lockup" aria-label="Originally home">
-          originally
-        </Link>
-        <nav className="nav-links" aria-label="Principal">
-          <a href="#produtos">Shop</a>
-          <a href="#colecao">Colecao</a>
-          <a href="#como-funciona">Atelie</a>
-          <a href="#reviews">Reviews</a>
-        </nav>
-        <div className="nav-actions">
-          <button className="icon-button" aria-label="Buscar produtos" type="button">
-            <Search size={18} />
-          </button>
-          <a
-            className="icon-button"
-            href={buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Comprar pelo WhatsApp"
-          >
-            <MessageCircle size={18} />
-          </a>
-        </div>
-      </div>
-    </header>
-  );
-}
-
-function Hero({ product, gallery, settings }: { product?: Product; gallery: Product[]; settings: SiteSettings }) {
+function Hero({
+  product,
+  gallery,
+  settings,
+  banner,
+}: {
+  product?: Product;
+  gallery: Product[];
+  settings: SiteSettings;
+  banner?: HeroBannerConfig | null;
+}) {
   const message = product ? buildProductMessage({ product, settings }) : settings.whatsapp_default_message;
+
+  if (banner) {
+    return (
+      <section className="container-shell hero hero-banner-mode" aria-label="Originally">
+        <FullHeroBanner banner={banner} />
+      </section>
+    );
+  }
 
   return (
     <section className="container-shell hero" aria-label="Originally">
       <div className="hero-grid">
         <div className="hero-left">
           <span className="eyebrow eyebrow-light">
-            <Sparkles size={14} /> Nova colecao
+            <Sparkles size={14} /> Desde 2002
           </span>
           <h1 className="hero-title">
-            Tudo pro seu pet com aconchego e protecao.
+            Conforto pet com fabrica propria e modelagem testada.
           </h1>
           <p className="hero-copy">
-            Peitorais, roupinhas e acessorios feitos em pequenos lotes, com acabamentos delicados e compra assistida pelo WhatsApp.
+            Camas, roupas, peitorais, guias e bolsas feitos pela Originally Pet em Erechim/RS, com foco em qualidade, design, seguranca e liberdade de movimento.
           </p>
           <div className="hero-actions">
             <a href="#produtos" className="btn btn-mint">
@@ -160,9 +125,9 @@ function Hero({ product, gallery, settings }: { product?: Product; gallery: Prod
             </a>
           </div>
           <div className="hero-stats">
-            <Stat value="feito" label="em pequenos lotes" />
-            <Stat value="4.9" label="media de reviews" />
-            <Stat value="12" label="imagens por produto" />
+            <Stat value="2002" label="ano de fundacao" />
+            <Stat value="6+" label="linhas de produto" />
+            <Stat value="RS" label="sede em Erechim" />
           </div>
         </div>
 
@@ -178,6 +143,34 @@ function Hero({ product, gallery, settings }: { product?: Product; gallery: Prod
         </div>
       </div>
     </section>
+  );
+}
+
+function FullHeroBanner({ banner }: { banner: HeroBannerConfig }) {
+  const bannerContent = (
+    <>
+      <span className="sr-only">Originally Pet</span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={banner.imageUrl} alt={banner.alt} />
+    </>
+  );
+
+  if (!banner.href) {
+    return <div className="hero-banner">{bannerContent}</div>;
+  }
+
+  if (banner.href.startsWith("/")) {
+    return (
+      <Link href={banner.href} className="hero-banner">
+        {bannerContent}
+      </Link>
+    );
+  }
+
+  return (
+    <a href={banner.href} target="_blank" rel="noreferrer" className="hero-banner">
+      {bannerContent}
+    </a>
   );
 }
 
@@ -210,7 +203,15 @@ function HeroFallback({ large }: { large?: boolean }) {
 }
 
 function Marquee() {
-  const items = ["aconchego e protecao", "embalagem reutilizavel", "bordado personalizado", "frete gratis Brasil", "feito a mao em pequenos lotes"];
+  const items = [
+    "fabrica propria desde 2002",
+    "camas e tocas",
+    "roupas de inverno",
+    "peitorais e guias",
+    "bolsas de passeio",
+    "testes com pets",
+    "mascotes personalizados",
+  ];
 
   return (
     <section className="marquee" aria-label="Diferenciais">
@@ -230,9 +231,9 @@ function ProductsSection({ products, categories, settings }: { products: Product
   return (
     <section id="produtos" className="section container-shell">
       <SectionHead
-        eyebrow="Selecionados"
-        title="Produtos com cara de presente."
-        copy="Escolha a peca, confirme tamanho e cor no produto e finalize a compra direto no WhatsApp."
+        eyebrow="Catalogo Originally"
+        title="Linhas reais para descanso, passeio e inverno."
+        copy="A vitrine destaca categorias do catalogo oficial: camas, roupas, bolsas, peitorais, guias, colchonetes, mantas e itens de protecao."
         action={<Link href="/categoria/roupas">Ver todos</Link>}
       />
       <div className="cat-tabs" aria-label="Categorias">
@@ -312,14 +313,14 @@ function CollectionFeature({ product, settings }: { product?: Product; settings:
         ) : (
           <PawPrint size={118} />
         )}
-        <span className="float-chip float-chip-one">toffee</span>
-        <span className="float-chip float-chip-two">menta</span>
+        <span className="float-chip float-chip-one">Erechim RS</span>
+        <span className="float-chip float-chip-two">sob medida</span>
       </div>
       <div className="collection-copy">
-        <span className="eyebrow">Colecao editavel</span>
+        <span className="eyebrow">Fabrica propria</span>
         <h2>{product?.name || "Colecao Toffee"}</h2>
         <p>
-          Use a vitrine do admin para escolher qual produto entra no hero, destaques, novidades e nesta colecao. A landing continua com cara de loja boutique, mas o conteudo fica editavel.
+          A Originally Pet desenvolve produtos para caes e gatos com atencao a materiais, acabamento e seguranca. As pecas sao pensadas para descanso, passeio e rotina, sempre equilibrando conforto, estilo e uso pratico.
         </p>
         <div className="collection-actions">
           {product ? (
@@ -345,18 +346,18 @@ function ProcessSection() {
   const steps = [
     {
       icon: <ShieldCheck size={22} />,
-      title: "Escolha a peca",
-      text: "Produtos publicados aparecem na home, categorias e pagina individual.",
+      title: "Escolha a linha",
+      text: "Camas, roupas, peitorais, guias, bolsas, colchonetes, mantas e itens de protecao podem ser organizados por colecao.",
     },
     {
       icon: <Sparkles size={22} />,
-      title: "Defina tamanho e cor",
-      text: "Quando houver variacao, a pagina exige a selecao antes de abrir o WhatsApp.",
+      title: "Confira medidas",
+      text: "Produtos de roupa usam grade por pescoco, torax e comprimento. Quando ficar entre dois tamanhos, a recomendacao e escolher o maior.",
     },
     {
       icon: <MessageCircle size={22} />,
-      title: "Finalize no WhatsApp",
-      text: "A mensagem leva produto, preco, link e variacao escolhida para atendimento rapido.",
+      title: "Atendimento assistido",
+      text: "O comprador entra pelo WhatsApp com produto, link e variacao escolhida para confirmar disponibilidade, cor, entrega e condicoes.",
     },
   ];
 
@@ -364,9 +365,9 @@ function ProcessSection() {
     <section id="como-funciona" className="section process-section">
       <div className="container-shell">
         <SectionHead
-          eyebrow="Atelie"
-          title="Pedido sob medida, entregue com mimo."
-          copy="O fluxo segue enxuto: sem carrinho e sem checkout por enquanto, tudo pronto para conversa e venda assistida."
+          eyebrow="Como comprar"
+          title="Da escolha ao atendimento, sem friccao."
+          copy="A experiencia combina catalogo visual com venda assistida, ideal para confirmar tamanho, cor, disponibilidade e detalhes antes do pedido."
         />
         <div className="process-grid">
           {steps.map((step, index) => (
@@ -385,24 +386,51 @@ function ProcessSection() {
 
 function ReviewsSection() {
   const reviews = [
-    ["Ajuste perfeito e atendimento muito cuidadoso.", "Luna"],
-    ["A embalagem parece presente e a peca ficou linda.", "Maya"],
-    ["Comprei pelo WhatsApp em poucos minutos.", "Nina"],
+    {
+      text: "As pecas chegam com acabamento caprichado e uma modelagem que respeita o movimento do pet.",
+      name: "Cliente lojista",
+      role: "Roupas e inverno",
+      initials: "CL",
+      imageUrl: "",
+    },
+    {
+      text: "A linha de camas facilita montar uma vitrine completa: couro sintetico, pele BabySoft, colchonetes e mantas para todas as estacoes.",
+      name: "Curadoria Originally",
+      role: "Descanso e decoracao",
+      initials: "CO",
+      imageUrl: "",
+    },
+    {
+      text: "O atendimento assistido ajuda a confirmar tamanho, cor e disponibilidade antes de fechar o pedido.",
+      name: "Atendimento",
+      role: "Compra pelo WhatsApp",
+      initials: "AT",
+      imageUrl: "",
+    },
   ];
 
   return (
     <section id="reviews" className="section container-shell">
-      <SectionHead eyebrow="Reviews" title="Vozes da nossa matilha." />
+      <SectionHead eyebrow="Depoimentos" title="Quem escolhe, nota os detalhes." copy="Fotos reais de pets, clientes ou lojistas podem acompanhar cada relato e deixar a prova social mais humana." />
       <div className="reviews-grid">
-        {reviews.map(([text, name]) => (
-          <article key={name} className="review-card">
+        {reviews.map((review) => (
+          <article key={review.name} className="review-card">
+            <div className="review-media" aria-hidden="true">
+              {review.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={review.imageUrl} alt="" />
+              ) : (
+                <span>{review.initials}</span>
+              )}
+            </div>
             <div className="stars" aria-label="5 estrelas">
               {Array.from({ length: 5 }).map((_, index) => (
                 <Star key={index} size={16} fill="currentColor" />
               ))}
             </div>
-            <p>{text}</p>
-            <strong>{name}</strong>
+            <p>{review.text}</p>
+            <strong>{review.name}</strong>
+            <small>{review.role}</small>
           </article>
         ))}
       </div>
@@ -413,7 +441,7 @@ function ReviewsSection() {
 function NewsSection({ products, settings }: { products: Product[]; settings: SiteSettings }) {
   return (
     <section className="section container-shell">
-      <SectionHead eyebrow="Novidades" title="Lancamentos e reposicoes." copy="Uma segunda vitrine para produtos novos, reposicoes ou colecoes sazonais." />
+      <SectionHead eyebrow="Novidades 2026" title="Novas texturas para uma rotina mais aconchegante." copy="Destaques inspirados no catalogo atual: Cama Oval Nuvem, Casaco Teddy, Capa Forrada, Manta Teddy e pecas da Colecao Patinhas de urso." />
       <div className="products-grid products-grid-compact">
         {products.map((product) => (
           <LandingProductCard key={product.id} product={product} settings={settings} />
@@ -428,7 +456,7 @@ function InstagramStrip() {
     <section className="container-shell instagram-strip" aria-label="Instagram">
       <div>
         <span className="eyebrow">Instagram</span>
-        <h2>Detalhes que aparecem no close.</h2>
+        <h2>Close em tecido, forma e acabamento.</h2>
       </div>
       <div className="insta-tiles">
         {Array.from({ length: 4 }).map((_, index) => (
@@ -446,7 +474,7 @@ function Newsletter({ settings }: { settings: SiteSettings }) {
     <section className="container-shell newsletter">
       <div>
         <span className="eyebrow eyebrow-light">Originally Club</span>
-        <h2>Receba reposicoes e novidades primeiro.</h2>
+        <h2>Receba novidades da fabrica primeiro.</h2>
       </div>
       <a
         href={buildWhatsAppUrl(settings.whatsapp_number, "Oi! Quero receber novidades da Originally.")}
@@ -458,35 +486,6 @@ function Newsletter({ settings }: { settings: SiteSettings }) {
         Entrar na lista
       </a>
     </section>
-  );
-}
-
-function StoreFooter({ settings }: { settings: SiteSettings }) {
-  return (
-    <footer className="store-footer">
-      <div className="container-shell footer-grid">
-        <div>
-          <Link href="/" className="brand-lockup footer-brand">
-            originally
-          </Link>
-          <p>Aconchego e protecao para pets, com curadoria visual e compra assistida pelo WhatsApp.</p>
-        </div>
-        <div className="footer-links">
-          <a href="#produtos">Shop</a>
-          <a href="#colecao">Colecao</a>
-          <a href="#como-funciona">Atelie</a>
-          <Link href="/admin">Admin</Link>
-        </div>
-        <a
-          href={buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)}
-          target="_blank"
-          rel="noreferrer"
-          className="btn btn-mint"
-        >
-          {settings.whatsapp_button_label}
-        </a>
-      </div>
-    </footer>
   );
 }
 

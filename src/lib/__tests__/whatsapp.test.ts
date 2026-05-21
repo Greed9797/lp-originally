@@ -12,10 +12,10 @@ describe("whatsapp helpers", () => {
       settings: sampleSettings,
     });
 
-    expect(message).toContain("Produto: Jaqueta Corta Vento Sherpa");
-    expect(message).toContain("Variacao: tamanho M, cor Toffee");
+    expect(message).toContain("Produto: Sueter ou Vestido Encanto");
+    expect(message).toContain("Variacao: tamanho M, cor Azul");
     expect(message).toContain("R$");
-    expect(message).toContain("https://originally.test/produto/jaqueta-corta-vento-sherpa");
+    expect(message).toContain("https://originally.test/produto/sueter-vestido-encanto");
   });
 
   it("keeps only digits in the whatsapp URL number", () => {
