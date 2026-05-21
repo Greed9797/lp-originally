@@ -30,6 +30,9 @@ ADMIN_EMAIL=
 ADMIN_PASSWORD=
 WHATSAPP_NUMBER=
 WHATSAPP_DEFAULT_MESSAGE=
+NEXT_PUBLIC_HOME_HERO_BANNER_URL=
+NEXT_PUBLIC_HOME_HERO_BANNER_ALT=
+NEXT_PUBLIC_HOME_HERO_BANNER_HREF=
 ```
 
 ## Rotas publicas
@@ -97,3 +100,16 @@ Observacao: o Playwright sobe o servidor na porta `3137`; se ja houver um `next 
 - Fluxo admin depende do Supabase real estar com tabelas visiveis via PostgREST.
 - Upload de imagem exige admin autenticado e limita produto a 12 imagens.
 - Antes de producao, rotacione credenciais que tenham sido compartilhadas fora do ambiente seguro.
+
+## Banner full da home
+
+Para usar uma arte pronta como primeira dobra da home, configure:
+
+```env
+NEXT_PUBLIC_HOME_HERO_BANNER_URL=/originally-toffee-hero.png
+NEXT_PUBLIC_HOME_HERO_BANNER_ALT=Colecao Toffee Originally Pet
+NEXT_PUBLIC_HOME_HERO_BANNER_HREF=#produtos
+```
+
+Se o arquivo estiver no repo, coloque em `public/originally-toffee-hero.png`.
+Se for uma URL externa/CDN/Supabase Storage, use a URL completa em `NEXT_PUBLIC_HOME_HERO_BANNER_URL`.

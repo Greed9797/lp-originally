@@ -42,12 +42,19 @@ export default async function Home() {
   const displayFeatured = uniqueProducts([...featuredProducts, ...products.filter((product) => product.featured), ...products]).slice(0, 4);
   const displayNews = uniqueProducts([...newestProducts, ...products]).slice(0, 4);
   const heroGallery = [heroProduct, collectionProduct, ...displayFeatured].filter(isProduct).slice(0, 4);
+  const homeHeroBannerUrl = process.env.NEXT_PUBLIC_HOME_HERO_BANNER_URL?.trim();
+  const homeHeroBannerAlt = process.env.NEXT_PUBLIC_HOME_HERO_BANNER_ALT?.trim() || "Colecao Toffee Originally Pet";
+  const homeHeroBannerHref = process.env.NEXT_PUBLIC_HOME_HERO_BANNER_HREF?.trim() || "#produtos";
 
   return (
     <main className="storefront">
       <PromoBar />
       <SiteNav settings={settings} />
-      <Hero product={heroProduct} gallery={heroGallery} settings={settings} />
+      {homeHeroBannerUrl ? (
+        <HomeHeroBanner src={homeHeroBannerUrl} alt={homeHeroBannerAlt} href={homeHeroBannerHref} settings={settings} />
+      ) : (
+        <Hero product={heroProduct} gallery={heroGallery} settings={settings} />
+      )}
       <Marquee />
       <ProductsSection products={displayFeatured} categories={categories} settings={settings} />
       <CollectionFeature product={collectionProduct} settings={settings} />
@@ -59,6 +66,25 @@ export default async function Home() {
       <StoreFooter settings={settings} />
       <WhatsAppFloating settings={settings} />
     </main>
+  );
+}
+
+function HomeHeroBanner({ src, alt, href, settings }: { src: string; alt: string; href: string; settings: SiteSettings }) {
+  return (
+    <section className="home-hero-banner" aria-label="Colecao Originally">
+      <a className="home-hero-banner-link" href={href}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={alt} />
+      </a>
+      <a
+        href={buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)}
+        target="_blank"
+        rel="noreferrer"
+        className="home-hero-whatsapp"
+      >
+        Comprar pelo WhatsApp <ArrowRight size={18} />
+      </a>
+    </section>
   );
 }
 
