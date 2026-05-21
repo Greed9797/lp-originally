@@ -1,9 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { formatPrice, parseCurrencyToCents, slugify } from "../format";
+import { formatPrice, formatProductPrice, parseCurrencyToCents, slugify } from "../format";
 
 describe("format helpers", () => {
   it("formats cents as BRL", () => {
     expect(formatPrice(18990)).toBe("R$ 189,90");
+  });
+
+  it("formats products without price as consultation", () => {
+    expect(formatProductPrice(0)).toBe("Sob consulta");
+    expect(formatProductPrice(null)).toBe("Sob consulta");
+    expect(formatProductPrice(18990)).toBe("R$ 189,90");
   });
 
   it("slugifies Portuguese product names", () => {

@@ -4,7 +4,7 @@
     "siteUrl": "https://www.originallypet.com.br",
     "apiBaseUrl": "https://app.mercos.com/api_b2b/v1"
   },
-  "fetchedAt": "2026-05-21T19:39:05.032Z",
+  "fetchedAt": "2026-05-21T20:00:57.054Z",
   "categories": [
     {
       "sourcePlatform": "mercos",
@@ -130,7 +130,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -279,7 +279,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -452,7 +452,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -1417,7 +1417,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -1488,7 +1488,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -1599,7 +1599,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -1738,7 +1738,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -1851,7 +1851,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -1934,7 +1934,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -2065,7 +2065,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -2158,7 +2158,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -2385,7 +2385,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -2500,7 +2500,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -2577,7 +2577,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -2798,7 +2798,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -2891,7 +2891,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -2944,7 +2944,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -3069,7 +3069,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -3146,7 +3146,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -3487,7 +3487,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -3804,7 +3804,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -3873,7 +3873,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -4010,7 +4010,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -4075,7 +4075,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -4194,7 +4194,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -4295,7 +4295,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -4400,7 +4400,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -4493,7 +4493,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -4768,7 +4768,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -4887,7 +4887,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -5132,7 +5132,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -5257,7 +5257,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -5396,7 +5396,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -5527,7 +5527,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -5676,7 +5676,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -5791,7 +5791,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -5958,7 +5958,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -6083,7 +6083,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -6312,7 +6312,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": "Destaque",
-      "status": "draft",
+      "status": "published",
       "featured": true,
       "images": [
         {
@@ -6611,7 +6611,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -6892,7 +6892,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -6957,7 +6957,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -7052,7 +7052,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -7171,7 +7171,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -7230,7 +7230,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -7325,7 +7325,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -7402,7 +7402,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -7691,7 +7691,7 @@
       "priceCents": 0,
       "whatsappMessage": null,
       "badge": null,
-      "status": "draft",
+      "status": "published",
       "featured": false,
       "images": [
         {
@@ -7926,7 +7926,7 @@
     }
   ],
   "assets": {
-    "generatedAt": "2026-05-21T19:39:05.032Z",
+    "generatedAt": "2026-05-21T20:00:57.054Z",
     "brand": [
       {
         "kind": "logo",
@@ -9864,6 +9864,6 @@
     "categories": 10,
     "products": 48,
     "images": 249,
-    "draftProducts": 48
+    "draftProducts": 0
   }
 }

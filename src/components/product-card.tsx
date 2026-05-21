@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, MessageCircle, PawPrint } from "lucide-react";
 import type { Product, SiteSettings } from "@/lib/types";
-import { formatPrice } from "@/lib/format";
+import { formatProductPrice } from "@/lib/format";
 import { buildProductMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 
 export function ProductCard({ product, settings, compact = false }: { product: Product; settings: SiteSettings; compact?: boolean }) {
@@ -42,7 +42,7 @@ export function ProductCard({ product, settings, compact = false }: { product: P
         </Link>
         <p className="mt-2 line-clamp-2 text-sm leading-[1.65] text-[var(--ink-500)]">{product.short_description || product.description}</p>
         <div className="mt-4 flex items-center justify-between gap-3">
-          <strong className="text-base font-bold text-[var(--ink-900)]">{formatPrice(product.price_cents)}</strong>
+          <strong className="text-base font-bold text-[var(--ink-900)]">{formatProductPrice(product.price_cents)}</strong>
           <Link href={`/produto/${product.slug}`} className="inline-flex items-center gap-1 text-sm font-semibold tracking-[0.03em] text-[var(--toffee-800)]">
             Detalhes <ArrowRight size={14} />
           </Link>

@@ -250,7 +250,7 @@ export function normalizeProduct(
     ? `${category.name} Originally Pet${code ? ` - codigo ${code}` : ""}.`
     : `Produto Originally Pet${code ? ` - codigo ${code}` : ""}.`;
   const variants = normalizeVariants(getArray(raw, "grades_v3", "variacoes", "variants"), priceCents);
-  const hasMinimumPublicData = images.length > 0 && priceCents > 0;
+  const hasMinimumPublicData = images.length > 0;
 
   return {
     sourcePlatform: MERCOS_SOURCE_PLATFORM,

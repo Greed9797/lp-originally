@@ -5,6 +5,10 @@ export function formatPrice(cents: number, locale = "pt-BR") {
   }).format(cents / 100);
 }
 
+export function formatProductPrice(cents: number | null | undefined, locale = "pt-BR") {
+  return cents && cents > 0 ? formatPrice(cents, locale) : "Sob consulta";
+}
+
 export function slugify(value: string) {
   return value
     .normalize("NFD")

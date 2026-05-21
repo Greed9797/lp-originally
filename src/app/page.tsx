@@ -11,7 +11,7 @@ import {
   Sparkles,
   Star,
 } from "lucide-react";
-import { formatPrice } from "@/lib/format";
+import { formatProductPrice } from "@/lib/format";
 import { buildProductMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { getCategories, getHomeSlots, getProducts, getSettings } from "@/lib/data";
 import type { Category, Product, SiteSettings } from "@/lib/types";
@@ -286,7 +286,7 @@ function LandingProductCard({ product, settings }: { product: Product; settings:
           <p>{product.short_description || product.description}</p>
         </div>
         <div className="product-bottom">
-          <strong>{formatPrice(product.price_cents)}</strong>
+          <strong>{formatProductPrice(product.price_cents)}</strong>
           <a
             href={buildWhatsAppUrl(settings.whatsapp_number, message)}
             target="_blank"

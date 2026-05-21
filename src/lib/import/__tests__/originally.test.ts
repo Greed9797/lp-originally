@@ -69,7 +69,7 @@ describe("Originally Mercos import normalizer", () => {
     });
     expect(catalog.products[0].images).toHaveLength(2);
     expect(catalog.products[0].variants).toHaveLength(2);
-    expect(catalog.products[1]).toMatchObject({ status: "draft", priceCents: 0 });
+    expect(catalog.products[1]).toMatchObject({ status: "published", priceCents: 0 });
     expect(catalog.assets.products[0].images).toHaveLength(2);
   });
 

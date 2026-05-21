@@ -1,5 +1,5 @@
 import type { Product, ProductVariant, SiteSettings } from "./types";
-import { formatPrice } from "./format";
+import { formatProductPrice } from "./format";
 
 const DEFAULT_NUMBER = "5511999999999";
 const DEFAULT_MESSAGE = "Ola! Tenho interesse em produtos da Originally.";
@@ -22,7 +22,7 @@ export function buildProductMessage(options: {
     custom || options.settings?.whatsapp_default_message || DEFAULT_MESSAGE,
     `Produto: ${product.name}`,
     variant ? `Variacao: tamanho ${variant.size}, cor ${variant.color}` : null,
-    `Preco: ${formatPrice(price)}`,
+    `Preco: ${formatProductPrice(price)}`,
     siteUrl ? `Link: ${siteUrl}/produto/${product.slug}` : null,
   ].filter(Boolean);
 
