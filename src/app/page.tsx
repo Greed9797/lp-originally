@@ -64,16 +64,12 @@ type HeroBannerConfig = {
 };
 
 function getHeroBanner(): HeroBannerConfig | null {
-  const imageUrl = process.env.NEXT_PUBLIC_HOME_HERO_BANNER_URL?.trim();
-
-  if (!imageUrl) {
-    return null;
-  }
+  const imageUrl = process.env.NEXT_PUBLIC_HOME_HERO_BANNER_URL?.trim() || "/originally-toffee-hero.webp";
 
   return {
     imageUrl,
-    alt: process.env.NEXT_PUBLIC_HOME_HERO_BANNER_ALT?.trim() || "Banner Originally Pet",
-    href: process.env.NEXT_PUBLIC_HOME_HERO_BANNER_HREF?.trim() || undefined,
+    alt: process.env.NEXT_PUBLIC_HOME_HERO_BANNER_ALT?.trim() || "Colecao Toffee Originally Pet",
+    href: process.env.NEXT_PUBLIC_HOME_HERO_BANNER_HREF?.trim() || "#produtos",
   };
 }
 
