@@ -16,7 +16,9 @@ import { buildTrackedWhatsAppUrl } from "@/lib/whatsapp";
 import { getCategories, getHomeSlots, getInstagramTiles, getProducts, getSettings } from "@/lib/data";
 import type { Category, InstagramTile, Product, SiteSettings } from "@/lib/types";
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams?: Promise<{ q?: string }> }) {
+  const params = await searchParams;
+  const searchQuery = normalizeSearchTerm(params?.q);
   const [settings, products, categories, slots, instagramTiles] = await Promise.all([
     getSettings(),
     getProducts(),
@@ -40,6 +42,7 @@ export default async function Home() {
 
   const displayFeatured = uniqueProducts([...featuredProducts, ...products.filter((product) => product.featured), ...products]).slice(0, 4);
   const displayNews = uniqueProducts([...newestProducts, ...products]).slice(0, 4);
+  const searchedProducts = searchQuery ? filterProducts(products, searchQuery) : displayFeatured;
   const heroGallery = [heroProduct, collectionProduct, ...displayFeatured].filter(isProduct).slice(0, 4);
   const heroBanner = getHeroBanner();
 
@@ -47,7 +50,7 @@ export default async function Home() {
     <main className="storefront">
       <Hero product={heroProduct} gallery={heroGallery} banner={heroBanner} />
       <Marquee />
-      <ProductsSection products={displayFeatured} categories={categories} settings={settings} />
+      <ProductsSection products={searchedProducts} categories={categories} settings={settings} searchQuery={searchQuery} totalProducts={products.length} />
       <CollectionFeature product={collectionProduct} settings={settings} />
       <ProcessSection />
       <ReviewsSection />
@@ -224,19 +227,36 @@ function Marquee() {
   );
 }
 
-function ProductsSection({ products, categories, settings }: { products: Product[]; categories: Category[]; settings: SiteSettings }) {
+function ProductsSection({
+  products,
+  categories,
+  settings,
+  searchQuery,
+  totalProducts,
+}: {
+  products: Product[];
+  categories: Category[];
+  settings: SiteSettings;
+  searchQuery: string;
+  totalProducts: number;
+}) {
+  const hasSearch = Boolean(searchQuery);
   return (
     <section id="produtos" className="section container-shell">
       <SectionHead
-        eyebrow="Catalogo Originally"
-        title="Linhas reais para descanso, passeio e inverno."
-        copy="A vitrine destaca categorias do catalogo oficial: camas, roupas, bolsas, peitorais, guias, colchonetes, mantas e itens de protecao."
-        action={<Link href="/categoria/roupas">Ver todos</Link>}
+        eyebrow={hasSearch ? "Busca" : "Catalogo Originally"}
+        title={hasSearch ? `Resultados para "${searchQuery}"` : "Linhas reais para descanso, passeio e inverno."}
+        copy={
+          hasSearch
+            ? `${products.length} de ${totalProducts} produto(s) encontrados no catalogo publicado.`
+            : "A vitrine destaca categorias do catalogo oficial: camas, roupas, bolsas, peitorais, guias, colchonetes, mantas e itens de protecao."
+        }
+        action={hasSearch ? <Link href="/#produtos">Limpar busca</Link> : <Link href="/categoria/roupas">Ver todos</Link>}
       />
       <div className="cat-tabs" aria-label="Categorias">
-        <a href="#produtos" className="cat-tab active">
+        <Link href="/#produtos" className={`cat-tab${!hasSearch ? " active" : ""}`}>
           Todos
-        </a>
+        </Link>
         {categories.slice(0, 4).map((category) => (
           <Link key={category.id} href={`/categoria/${category.slug}`} className="cat-tab">
             {category.name}
@@ -248,6 +268,13 @@ function ProductsSection({ products, categories, settings }: { products: Product
           <LandingProductCard key={product.id} product={product} settings={settings} />
         ))}
       </div>
+      {hasSearch && products.length === 0 ? (
+        <div className="search-empty-state">
+          <strong>Nenhum produto encontrado</strong>
+          <p>Tente buscar por categoria, linha ou nome do produto. Exemplos: cama, bolsa, casaco ou peitoral.</p>
+          <Link href="/#produtos" className="btn btn-dark">Ver catalogo completo</Link>
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -532,4 +559,34 @@ function isProduct(product: Product | null | undefined): product is Product {
 
 function uniqueProducts(products: Product[]) {
   return Array.from(new Map(products.map((product) => [product.id, product])).values());
+}
+
+function normalizeSearchTerm(value?: string) {
+  return (value || "").trim().replace(/\s+/g, " ").slice(0, 80);
+}
+
+function normalizeSearchText(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase();
+}
+
+function filterProducts(products: Product[], term: string) {
+  const terms = normalizeSearchText(term).split(" ").filter(Boolean);
+  if (!terms.length) return products;
+
+  return products.filter((product) => {
+    const haystack = normalizeSearchText([
+      product.name,
+      product.short_description,
+      product.description,
+      product.badge,
+      product.category?.name,
+      product.category?.description,
+      ...product.variants.flatMap((variant) => [variant.size, variant.color]),
+    ].filter(Boolean).join(" "));
+
+    return terms.every((item) => haystack.includes(item));
+  });
 }

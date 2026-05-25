@@ -253,12 +253,12 @@ select {
 
 .brand-lockup img {
   display: block;
-  width: clamp(132px, 13vw, 178px);
+  width: clamp(104px, 10vw, 136px);
   height: auto;
 }
 
 .footer-brand img {
-  width: clamp(150px, 15vw, 210px);
+  width: clamp(136px, 13vw, 176px);
 }
 
 .nav-links,
@@ -672,6 +672,30 @@ select {
 
 .products-grid-compact {
   margin-top: 2rem;
+}
+
+.search-empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 0.85rem;
+  margin-top: 1.35rem;
+  border: 1px solid rgba(88, 53, 26, 0.1);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: clamp(2rem, 5vw, 3.4rem);
+  text-align: center;
+}
+
+.search-empty-state strong {
+  color: var(--toffee-800);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: var(--type-h3);
+  line-height: 1.15;
+}
+
+.search-empty-state p {
+  max-width: 520px;
+  color: var(--ink-500);
 }
 
 .product-card {

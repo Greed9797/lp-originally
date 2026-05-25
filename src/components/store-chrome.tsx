@@ -66,9 +66,9 @@ function StoreHeader() {
       <div className="container-shell site-nav">
         <Link href="/" className="brand-lockup" aria-label="Originally home">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/originally-logo.svg" alt="Originally" />
+          <img src="/originally-logo.png" alt="Originally" />
         </Link>
-        <form className="site-search" action="/" role="search">
+        <form className="site-search" action="/#produtos" role="search">
           <Search size={18} />
           <input name="q" type="search" placeholder="Buscar camas, roupas, peitorais..." aria-label="Buscar produtos" />
           <button type="submit">Buscar</button>
@@ -118,7 +118,7 @@ function StoreFooter({ settings }: { settings: SiteSettings }) {
           <div className="footer-brand-block">
             <Link href="/" className="brand-lockup footer-brand">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/originally-logo.svg" alt="Originally" />
+              <img src="/originally-logo.png" alt="Originally" />
             </Link>
             <p>Fabrica propria de produtos para caes e gatos, com sede em Erechim/RS desde 2002.</p>
             <a
