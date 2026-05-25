@@ -79,11 +79,19 @@ export async function saveHomeSlotsAction(formData: FormData) {
   const supabase = await createSupabaseServerClient();
   const positions = ["hero", "destaques", "novidades", "colecao"];
   const rows = positions.flatMap((position) => {
-    const ids = String(formData.get(position) || "")
+    const visualIds = formData.getAll(`${position}[]`).map((value) => String(value).trim()).filter(Boolean);
+    const legacyIds = String(formData.get(position) || "")
       .split(",")
       .map((value) => value.trim())
       .filter(Boolean);
-    return ids.map((product_id, sort_order) => ({ position, product_id, sort_order }));
+    const ids = visualIds.length ? visualIds : legacyIds;
+    return ids
+      .map((product_id, index) => ({
+        position,
+        product_id,
+        sort_order: Number(formData.get(`${position}_order_${product_id}`) || index),
+      }))
+      .sort((a, b) => a.sort_order - b.sort_order);
   });
   const { error: delError } = await supabase.from("home_slots").delete().neq("id", "00000000-0000-0000-0000-000000000000");
   if (delError) throw new Error(delError.message);
@@ -93,6 +101,51 @@ export async function saveHomeSlotsAction(formData: FormData) {
   }
   revalidatePath("/");
   revalidatePath("/admin/vitrines");
+  redirect("/admin/vitrines?status=saved");
+}
+
+export async function saveInstagramTilesAction(formData: FormData) {
+  await requireAdmin();
+  const supabase = await createSupabaseServerClient();
+  const ids = formData.getAll("tile_id").map((value) => String(value)).filter(Boolean);
+
+  for (const id of ids) {
+    const { error } = await supabase
+      .from("instagram_tiles")
+      .update({
+        alt_text: String(formData.get(`alt_text_${id}`) || "").trim() || null,
+        link_url: String(formData.get(`link_url_${id}`) || "").trim() || null,
+        sort_order: Number(formData.get(`sort_order_${id}`) || 0),
+        active: formData.get(`active_${id}`) === "on",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id);
+    if (error) throw new Error(error.message);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/instagram");
+  redirect("/admin/instagram?status=saved");
+}
+
+export async function bulkUpdateProductsAction(formData: FormData) {
+  await requireAdmin();
+  const ids = formData.getAll("product_id").map((value) => String(value)).filter(Boolean);
+  const intent = String(formData.get("intent") || "");
+  const returnTo = sanitizeAdminReturn(String(formData.get("return_to") || "/admin/produtos"));
+  if (!ids.length) redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}status=empty-selection`);
+  if (intent !== "publish" && intent !== "draft") redirect(returnTo);
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase
+    .from("products")
+    .update({ status: intent === "publish" ? "published" : "draft", updated_at: new Date().toISOString() })
+    .in("id", ids);
+  if (error) throw new Error(error.message);
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath("/admin/produtos");
+  redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}status=${intent}`);
 }
 
 export async function runOriginallyImportAction(formData: FormData) {
@@ -200,4 +253,8 @@ function parseVariants(raw: string): Array<Pick<ProductVariant, "size" | "color"
 
 function isSupabaseSchemaCacheError(error: { code?: string; message?: string }) {
   return error.code === "PGRST205" || error.message?.includes("schema cache");
+}
+
+function sanitizeAdminReturn(path: string) {
+  return path.startsWith("/admin/produtos") ? path : "/admin/produtos";
 }

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { ProductVariant } from "@/lib/types";
+import { centsToVariantPriceInput, variantPriceInputToCents } from "@/lib/admin/variants";
 
 type VariantDraft = Pick<ProductVariant, "size" | "color" | "stock" | "price_cents" | "active">;
 
@@ -27,19 +28,38 @@ export function VariantEditor({ variants }: { variants: ProductVariant[] }) {
           Adicionar
         </button>
       </div>
-      <div className="mt-5 grid gap-3">
+      <div className="admin-variant-list">
         {items.map((item, index) => (
-          <div key={index} className="grid gap-3 rounded-2xl bg-[var(--blush-50)] p-4 md:grid-cols-[1fr_1fr_0.8fr_0.8fr_auto]">
-            <input className="admin-input" placeholder="Tamanho" value={item.size} onChange={(event) => update(index, { size: event.target.value })} />
-            <input className="admin-input" placeholder="Cor" value={item.color} onChange={(event) => update(index, { color: event.target.value })} />
-            <input className="admin-input" placeholder="Estoque" type="number" value={item.stock} onChange={(event) => update(index, { stock: Number(event.target.value) })} />
-            <input
-              className="admin-input"
-              placeholder="Preço opcional em centavos"
-              type="number"
-              value={item.price_cents ?? ""}
-              onChange={(event) => update(index, { price_cents: event.target.value ? Number(event.target.value) : null })}
-            />
+          <div key={index} className="admin-variant-row">
+            <label className="admin-field">
+              <span>Tamanho</span>
+              <input className="admin-input" placeholder="P, M, G..." value={item.size} onChange={(event) => update(index, { size: event.target.value })} />
+            </label>
+            <label className="admin-field">
+              <span>Cor</span>
+              <input className="admin-input" placeholder="Toffee, Sherpa..." value={item.color} onChange={(event) => update(index, { color: event.target.value })} />
+            </label>
+            <label className="admin-field">
+              <span>Estoque</span>
+              <input className="admin-input" placeholder="0" type="number" min="0" value={item.stock} onChange={(event) => update(index, { stock: Number(event.target.value) })} />
+            </label>
+            <label className="admin-field">
+              <span>Preco opcional</span>
+              <input
+                className="admin-input"
+                placeholder="199,90"
+                inputMode="decimal"
+                value={centsToVariantPriceInput(item.price_cents)}
+                onChange={(event) => update(index, { price_cents: variantPriceInputToCents(event.target.value) })}
+              />
+            </label>
+            <label className="shopify-toggle admin-variant-active">
+              <input type="checkbox" checked={item.active} onChange={(event) => update(index, { active: event.target.checked })} />
+              <span>
+                <strong>Ativa</strong>
+                <small>Aparece no produto</small>
+              </span>
+            </label>
             <button type="button" className="btn bg-white text-sm" onClick={() => setItems((current) => current.filter((_, i) => i !== index))}>
               Remover
             </button>

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { CloudUpload, Database, ImageIcon, RefreshCw, ShieldCheck } from "lucide-react";
+import { AdminBadge, AdminCard, AdminEmptyState, AdminPage } from "../../admin-components";
 import { getImportRuns } from "@/lib/data";
 import { hasServiceRoleEnv } from "@/lib/supabase/env";
 import { runOriginallyImportAction } from "../../actions";
@@ -13,17 +14,16 @@ export default async function ImportAdminPage({
   const configured = hasServiceRoleEnv();
 
   return (
-    <div>
-      <span className="text-xs font-black uppercase tracking-[0.16em] text-[var(--mint-ink)]">Catalogo Mercos</span>
-      <h1 className="brand-display text-5xl text-[var(--toffee-800)]">Importacao Originally</h1>
-      <p className="mt-2 max-w-3xl text-[var(--ink-500)]">
-        Capture produtos, categorias e imagens do catalogo Originally Pet e sincronize tudo no Supabase sem expor chaves no client.
-      </p>
-
+    <AdminPage
+      eyebrow="Catalogo Mercos"
+      title="Importacao Originally"
+      description="Capture produtos, categorias e imagens do catalogo Originally Pet e sincronize tudo no Supabase sem expor chaves no client."
+    >
       <StatusMessage status={params.status} products={params.products} images={params.images} />
 
-      <section className="mt-8 grid gap-5 lg:grid-cols-[1fr_0.8fr]">
-        <form action={runOriginallyImportAction} className="rounded-[24px] bg-white p-6 shadow-[0_12px_30px_rgba(80,40,30,0.06)]">
+      <section className="admin-two-column">
+        <AdminCard>
+          <form action={runOriginallyImportAction}>
           <div className="flex items-start gap-3">
             <span className="rounded-2xl bg-[var(--mint-100)] p-3 text-[var(--mint-ink)]">
               <RefreshCw size={20} />
@@ -56,20 +56,19 @@ export default async function ImportAdminPage({
               </p>
             ) : null}
           </div>
-        </form>
+          </form>
+        </AdminCard>
 
-        <section className="rounded-[24px] bg-white p-6 shadow-[0_12px_30px_rgba(80,40,30,0.06)]">
-          <h2 className="brand-display text-3xl text-[var(--toffee-800)]">Checklist seguro</h2>
+        <AdminCard title="Checklist seguro">
           <div className="mt-5 grid gap-3 text-sm text-[var(--ink-600)]">
             <Check icon={<ShieldCheck size={18} />} text="Service role fica somente no servidor." />
             <Check icon={<Database size={18} />} text="Upsert idempotente por source_id Mercos." />
             <Check icon={<ImageIcon size={18} />} text="Limite de 12 imagens por produto preservado." />
           </div>
-        </section>
+        </AdminCard>
       </section>
 
-      <section className="mt-8 rounded-[24px] bg-white p-6">
-        <h2 className="brand-display text-3xl text-[var(--toffee-800)]">Ultimas importacoes</h2>
+      <AdminCard title="Ultimas importacoes">
         <div className="mt-5 grid gap-3">
           {runs.map((run) => (
             <article key={run.id} className="grid gap-3 rounded-2xl bg-[var(--blush-50)] p-4 md:grid-cols-[1fr_auto_auto] md:items-center">
@@ -79,18 +78,18 @@ export default async function ImportAdminPage({
                   {new Date(run.started_at).toLocaleString("pt-BR")} - {run.products_imported}/{run.products_seen} produtos
                 </span>
               </div>
-              <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-[var(--toffee-800)]">
+              <AdminBadge>
                 {run.images_uploaded}/{run.images_seen} imagens
-              </span>
-              <span className={`rounded-full px-3 py-1 text-xs font-black ${run.errors.length ? "bg-red-100 text-red-800" : "bg-emerald-100 text-emerald-800"}`}>
+              </AdminBadge>
+              <AdminBadge tone={run.errors.length ? "critical" : "success"}>
                 {run.errors.length ? `${run.errors.length} erro(s)` : "sem erros"}
-              </span>
+              </AdminBadge>
             </article>
           ))}
-          {!runs.length ? <p className="text-sm text-[var(--ink-500)]">Nenhuma importacao registrada ainda.</p> : null}
+          {!runs.length ? <AdminEmptyState title="Nenhuma importacao registrada" text="Use o importador para gravar o primeiro snapshot do catalogo." /> : null}
         </div>
-      </section>
-    </div>
+      </AdminCard>
+    </AdminPage>
   );
 }
 
@@ -116,7 +115,7 @@ function StatusMessage({ status, products, images }: { status?: string; products
   };
   const message = messages[status];
   if (!message) return null;
-  return <p className={`mt-5 rounded-2xl border p-4 text-sm font-bold ${message.className}`}>{message.text}</p>;
+  return <p className={`admin-status-message ${message.className}`}>{message.text}</p>;
 }
 
 function Check({ icon, text }: { icon: ReactNode; text: string }) {

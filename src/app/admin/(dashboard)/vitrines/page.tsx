@@ -1,5 +1,7 @@
 import { getHomeSlots, getProducts } from "@/lib/data";
 import { saveHomeSlotsAction } from "../../actions";
+import { AdminBadge, AdminCard, AdminEmptyState, AdminPage } from "../../admin-components";
+import { formatPrice } from "@/lib/format";
 
 const positions = [
   ["hero", "Hero"],
@@ -8,33 +10,63 @@ const positions = [
   ["colecao", "Colecao"],
 ] as const;
 
-export default async function SlotsAdminPage() {
-  const [products, slots] = await Promise.all([getProducts(true), getHomeSlots()]);
+export default async function SlotsAdminPage({ searchParams }: { searchParams: Promise<{ status?: string }> }) {
+  const [params, products, slots] = await Promise.all([searchParams, getProducts(true), getHomeSlots()]);
+  const activeByPosition = new Map(positions.map(([key]) => [key, slots.filter((slot) => slot.position === key).map((slot) => slot.product_id)]));
   return (
-    <div>
-      <span className="text-xs font-black uppercase tracking-[0.16em] text-[var(--mint-ink)]">Landing</span>
-      <h1 className="brand-display text-5xl text-[var(--toffee-800)]">Vitrines por posicao</h1>
-      <p className="mt-2 max-w-2xl text-[var(--ink-500)]">Informe IDs de produtos separados por virgula para controlar onde cada produto aparece na home.</p>
-      <form action={saveHomeSlotsAction} className="mt-8 grid gap-5 rounded-[24px] bg-white p-6">
-        {positions.map(([key, label]) => (
-          <label key={key} className="admin-field">
-            <span>{label}</span>
-            <input className="admin-input" name={key} defaultValue={slots.filter((slot) => slot.position === key).map((slot) => slot.product_id).join(",")} />
-          </label>
-        ))}
-        <button className="btn btn-mint justify-self-start">Salvar vitrines</button>
-      </form>
-      <section className="mt-8 rounded-[24px] bg-white p-6">
-        <h2 className="brand-display text-3xl text-[var(--toffee-800)]">Produtos disponiveis</h2>
-        <div className="mt-4 grid gap-2">
-          {products.map((product) => (
-            <div key={product.id} className="rounded-2xl bg-[var(--blush-50)] p-3 text-sm">
-              <strong>{product.name}</strong>
-              <span className="ml-3 text-[var(--ink-500)]">{product.id}</span>
-            </div>
-          ))}
+    <AdminPage eyebrow="Landing" title="Vitrines por posicao" description="Selecione produtos visualmente e defina a ordem que aparece em cada bloco da home.">
+      {params.status === "saved" ? <p className="admin-status-message admin-status-success">Vitrines salvas.</p> : null}
+      <form action={saveHomeSlotsAction} className="admin-slots-form">
+        {positions.map(([key, label]) => {
+          const selected = activeByPosition.get(key) || [];
+          return (
+            <AdminCard key={key} title={label} description={`Produtos escolhidos para a posicao ${label.toLowerCase()}.`}>
+              <div className="slot-summary">
+                <AdminBadge tone={selected.length ? "success" : "warning"}>{selected.length} selecionado(s)</AdminBadge>
+              </div>
+              {products.length ? (
+                <div className="admin-product-selector">
+                  {products.map((product) => {
+                    const isChecked = selected.includes(product.id);
+                    const order = selected.indexOf(product.id);
+                    return (
+                      <label key={`${key}-${product.id}`} className="admin-selector-card">
+                        <input type="checkbox" name={`${key}[]`} value={product.id} defaultChecked={isChecked} />
+                        {product.images[0] ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={product.images[0].url} alt={product.images[0].alt || product.name} />
+                        ) : (
+                          <span className="admin-selector-placeholder">IMG</span>
+                        )}
+                        <span className="admin-selector-copy">
+                          <strong>{product.name}</strong>
+                          <small>{product.category?.name || "Sem categoria"} · {product.price_cents > 0 ? formatPrice(product.price_cents) : "Sob consulta"}</small>
+                        </span>
+                        <span className="admin-selector-order">
+                          <small>Ordem</small>
+                          <input
+                            name={`${key}_order_${product.id}`}
+                            type="number"
+                            defaultValue={order >= 0 ? order : 99}
+                            min="0"
+                            aria-label={`Ordem de ${product.name} em ${label}`}
+                          />
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              ) : (
+                <AdminEmptyState title="Nenhum produto disponivel" text="Cadastre produtos antes de montar vitrines." />
+              )}
+            </AdminCard>
+          );
+        })}
+        <div className="admin-save-bar">
+          <span>As alteracoes atualizam a home imediatamente apos salvar.</span>
+          <button className="btn btn-mint">Salvar vitrines</button>
         </div>
-      </section>
-    </div>
+      </form>
+    </AdminPage>
   );
 }

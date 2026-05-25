@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MessageCircle, PawPrint } from "lucide-react";
 import type { Product, ProductVariant, SiteSettings } from "@/lib/types";
 import { formatPrice, formatProductPrice } from "@/lib/format";
-import { buildProductMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
+import { buildTrackedWhatsAppUrl } from "@/lib/whatsapp";
 
 export function ProductDetailClient({ product, settings }: { product: Product; settings: SiteSettings }) {
   const activeVariants = product.variants.filter((variant) => variant.active);
@@ -14,13 +14,13 @@ export function ProductDetailClient({ product, settings }: { product: Product; s
   const selectedImage = product.images.find((image) => image.id === selectedImageId) ?? product.images[0] ?? null;
   const price = selected?.price_cents ?? product.price_cents;
   const canBuy = activeVariants.length === 0 || Boolean(selected && selected.stock > 0);
-  const message = buildProductMessage({ product, variant: selected, settings });
+  const hasMultipleImages = product.images.length > 1;
 
   return (
     <div className="container-shell grid gap-10 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:py-20">
-      <div className="grid gap-4 lg:grid-cols-[88px_minmax(0,1fr)]">
-        {product.images.length > 1 ? (
-          <div className="order-2 flex gap-3 overflow-x-auto pb-1 lg:order-1 lg:max-h-[640px] lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1">
+      <div className={hasMultipleImages ? "product-gallery-shell has-thumbs" : "product-gallery-shell is-single"}>
+        {hasMultipleImages ? (
+          <div className="product-gallery-thumbs">
             {product.images.map((image, index) => {
               const selected = image.id === selectedImage?.id;
               return (
@@ -40,7 +40,7 @@ export function ProductDetailClient({ product, settings }: { product: Product; s
             })}
           </div>
         ) : null}
-        <div className="relative order-1 aspect-square overflow-hidden rounded-[28px] product-art shadow-[0_22px_58px_rgba(80,40,30,0.13)] lg:order-2">
+        <div className="product-gallery-main product-art">
           {selectedImage ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={selectedImage.url} alt={selectedImage.alt || product.name} className="h-full w-full object-cover" />
@@ -50,7 +50,7 @@ export function ProductDetailClient({ product, settings }: { product: Product; s
             </div>
           )}
           {product.images.length ? (
-            <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-4 py-2 text-xs font-bold text-[var(--toffee-800)] shadow-[0_12px_28px_rgba(80,40,30,0.12)]">
+            <span className="product-gallery-count">
               {product.images.length} {product.images.length === 1 ? "imagem" : "imagens"}
             </span>
           ) : null}
@@ -66,7 +66,7 @@ export function ProductDetailClient({ product, settings }: { product: Product; s
         {activeVariants.length ? (
           <div className="mt-8">
             <div className="mb-3 text-[0.6875rem] font-medium uppercase tracking-[0.12em] text-[var(--ink-500)]">Escolha tamanho e cor</div>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="product-variant-grid">
               {activeVariants.map((variant) => (
                 <VariantButton
                   key={variant.id}
@@ -80,7 +80,7 @@ export function ProductDetailClient({ product, settings }: { product: Product; s
         ) : null}
 
         <a
-          href={canBuy ? buildWhatsAppUrl(settings.whatsapp_number, message) : undefined}
+          href={canBuy ? buildTrackedWhatsAppUrl({ product, variant: selected, placement: "product", sourcePath: `/produto/${product.slug}` }) : undefined}
           target="_blank"
           rel="noreferrer"
           aria-disabled={!canBuy}
@@ -105,13 +105,17 @@ function VariantButton({ variant, selected, onSelect }: { variant: ProductVarian
     <button
       type="button"
       onClick={onSelect}
-      className={`rounded-2xl border p-4 text-left transition ${
-        selected ? "border-[var(--mint-ink)] bg-[rgba(54,215,183,0.13)]" : "border-[var(--blush-200)] bg-white"
-      } ${soldOut ? "opacity-50" : ""}`}
+      className={`product-variant-option ${selected ? "is-selected" : ""} ${soldOut ? "is-sold-out" : ""}`}
     >
-      <strong className="block text-[var(--ink-900)]">{variant.size} / {variant.color}</strong>
-      <span className="text-sm text-[var(--ink-500)]">{soldOut ? "Esgotado" : `${variant.stock} em estoque`}</span>
-      {variant.price_cents ? <span className="block text-sm font-bold text-[var(--toffee-800)]">{formatPrice(variant.price_cents)}</span> : null}
+      <span className="variant-radio" />
+      <span className="variant-copy">
+        <strong>{variant.size || "Tamanho unico"}</strong>
+        <small>{variant.color || "Cor padrao"}</small>
+      </span>
+      <span className="variant-meta">
+        <strong>{variant.price_cents ? formatPrice(variant.price_cents) : "Preco base"}</strong>
+        <small>{soldOut ? "Esgotado" : `${variant.stock} em estoque`}</small>
+      </span>
     </button>
   );
 }

@@ -119,6 +119,55 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
   return NextResponse.json({ ok: true });
 }
 
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  if (!hasServiceRoleEnv()) {
+    return NextResponse.json({ error: "SUPABASE_SERVICE_ROLE_KEY nao configurada." }, { status: 500 });
+  }
+  const admin = await getCurrentAdmin();
+  if (!admin) return NextResponse.json({ error: "Nao autenticado." }, { status: 401 });
+
+  const { id } = await params;
+  const body = await request.json().catch(() => null) as { imageId?: string; direction?: "up" | "down"; intent?: "cover"; orderedIds?: string[] } | null;
+  if (!body?.imageId && !body?.orderedIds?.length) {
+    return NextResponse.json({ error: "Imagem ou ordem nao informada." }, { status: 400 });
+  }
+
+  const supabase = createSupabaseServiceClient();
+  const { data: product, error: productError } = await supabase
+    .from("products")
+    .select("id,slug")
+    .eq("id", id)
+    .maybeSingle();
+  if (productError) return NextResponse.json({ error: productError.message }, { status: 500 });
+  if (!product) return NextResponse.json({ error: "Produto nao encontrado." }, { status: 404 });
+
+  const { data: images, error: imagesError } = await supabase
+    .from("product_images")
+    .select("id,order_index")
+    .eq("product_id", id)
+    .order("order_index", { ascending: true });
+  if (imagesError) return NextResponse.json({ error: imagesError.message }, { status: 500 });
+  if (!images?.length) return NextResponse.json({ error: "Produto sem imagens." }, { status: 400 });
+
+  const orderedIds = resolveImageOrder(
+    images.map((image) => image.id),
+    body,
+  );
+  if (!orderedIds.length) return NextResponse.json({ error: "Ordem invalida." }, { status: 400 });
+
+  for (const [order_index, imageId] of orderedIds.entries()) {
+    const { error } = await supabase
+      .from("product_images")
+      .update({ order_index })
+      .eq("id", imageId)
+      .eq("product_id", id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  revalidateProductPaths(id, product.slug);
+  return NextResponse.json({ ok: true, orderedIds });
+}
+
 function sanitizeExtension(ext: string) {
   const clean = ext.toLowerCase().replace(/[^a-z0-9]/g, "");
   return clean || "jpg";
@@ -129,4 +178,22 @@ function revalidateProductPaths(id: string, slug?: string | null) {
   revalidatePath("/admin/produtos");
   revalidatePath(`/admin/produtos/${id}`);
   if (slug) revalidatePath(`/produto/${slug}`);
+}
+
+function resolveImageOrder(currentIds: string[], body: { imageId?: string; direction?: "up" | "down"; intent?: "cover"; orderedIds?: string[] }) {
+  if (body.orderedIds?.length) {
+    const unique = body.orderedIds.filter((id, index, all) => currentIds.includes(id) && all.indexOf(id) === index);
+    return [...unique, ...currentIds.filter((id) => !unique.includes(id))];
+  }
+
+  const imageId = body.imageId;
+  if (!imageId || !currentIds.includes(imageId)) return [];
+  if (body.intent === "cover") return [imageId, ...currentIds.filter((id) => id !== imageId)];
+
+  const nextIds = [...currentIds];
+  const index = nextIds.indexOf(imageId);
+  const targetIndex = body.direction === "up" ? index - 1 : body.direction === "down" ? index + 1 : index;
+  if (targetIndex < 0 || targetIndex >= nextIds.length || targetIndex === index) return nextIds;
+  [nextIds[index], nextIds[targetIndex]] = [nextIds[targetIndex], nextIds[index]];
+  return nextIds;
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ImageIcon, Trash2, UploadCloud } from "lucide-react";
+import { ArrowDown, ArrowUp, ImageIcon, Star, Trash2, UploadCloud } from "lucide-react";
 import type { ProductImage } from "@/lib/types";
 
 const MAX_IMAGES = 12;
@@ -54,6 +54,17 @@ export function ImageManager({ productId, images }: { productId: string; images:
           <article key={image.id} className="media-thumb">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={image.url} alt={image.alt || `Imagem ${index + 1}`} />
+            <div className="media-thumb-toolbar">
+              <button type="button" aria-label="Mover imagem para cima" onClick={() => reorderImage(image.id, "up")} disabled={pending || index === 0}>
+                <ArrowUp size={14} />
+              </button>
+              <button type="button" aria-label="Mover imagem para baixo" onClick={() => reorderImage(image.id, "down")} disabled={pending || index === images.length - 1}>
+                <ArrowDown size={14} />
+              </button>
+              <button type="button" aria-label="Definir como capa" onClick={() => setCover(image.id)} disabled={pending || index === 0}>
+                <Star size={14} />
+              </button>
+            </div>
             <div className="media-thumb-bar">
               <span>{index === 0 ? "Capa" : `Imagem ${index + 1}`}</span>
               <button type="button" aria-label="Remover imagem" onClick={() => removeImage(image.id)} disabled={pending || deletingId === image.id}>
@@ -183,6 +194,31 @@ export function ImageManager({ productId, images }: { productId: string; images:
         return;
       }
       setMessage("Imagem removida.");
+      router.refresh();
+    });
+  }
+
+  function reorderImage(imageId: string, direction: "up" | "down") {
+    patchImageOrder({ imageId, direction }, direction === "up" ? "Imagem movida para cima." : "Imagem movida para baixo.");
+  }
+
+  function setCover(imageId: string) {
+    patchImageOrder({ imageId, intent: "cover" }, "Capa atualizada.");
+  }
+
+  function patchImageOrder(body: { imageId: string; direction?: "up" | "down"; intent?: "cover" }, successMessage: string) {
+    startTransition(async () => {
+      const response = await fetch(`/api/admin/products/${productId}/images`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await readJson(response);
+      if (!response.ok || data.error) {
+        setMessage(data.error || "Nao foi possivel reordenar as imagens.");
+        return;
+      }
+      setMessage(successMessage);
       router.refresh();
     });
   }

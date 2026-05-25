@@ -1,11 +1,11 @@
 import { MessageCircle } from "lucide-react";
 import type { SiteSettings } from "@/lib/types";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { buildTrackedWhatsAppUrl } from "@/lib/whatsapp";
 
 export function WhatsAppFloating({ settings }: { settings: SiteSettings }) {
   return (
     <a
-      href={buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)}
+      href={buildTrackedWhatsAppUrl({ placement: "floating", sourcePath: "/" })}
       target="_blank"
       rel="noreferrer"
       className="floating-whatsapp btn btn-mint shadow-[0_16px_36px_rgba(31,135,112,0.32)]"

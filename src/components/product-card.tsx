@@ -2,11 +2,10 @@ import Link from "next/link";
 import { ArrowRight, MessageCircle, PawPrint } from "lucide-react";
 import type { Product, SiteSettings } from "@/lib/types";
 import { formatProductPrice } from "@/lib/format";
-import { buildProductMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
+import { buildTrackedWhatsAppUrl } from "@/lib/whatsapp";
 
-export function ProductCard({ product, settings, compact = false }: { product: Product; settings: SiteSettings; compact?: boolean }) {
+export function ProductCard({ product, compact = false }: { product: Product; settings: SiteSettings; compact?: boolean }) {
   const image = product.images[0];
-  const message = buildProductMessage({ product, settings });
   const inStock = product.variants.length === 0 || product.variants.some((variant) => variant.active && variant.stock > 0);
 
   return (
@@ -48,7 +47,7 @@ export function ProductCard({ product, settings, compact = false }: { product: P
           </Link>
         </div>
         <a
-          href={buildWhatsAppUrl(settings.whatsapp_number, message)}
+          href={buildTrackedWhatsAppUrl({ product, placement: "collection", sourcePath: `/categoria/${product.category?.slug || ""}` })}
           target="_blank"
           rel="noreferrer"
           className="btn btn-mint mt-5 w-full text-sm"

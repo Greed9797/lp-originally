@@ -6,28 +6,45 @@ const nav = [
   ["Produtos", "/admin/produtos"],
   ["Categorias", "/admin/categorias"],
   ["Vitrines", "/admin/vitrines"],
+  ["Instagram", "/admin/instagram"],
+  ["Contatos", "/admin/contatos"],
   ["Importacao", "/admin/importacao"],
   ["Configuracoes", "/admin/configuracoes"],
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="min-h-screen bg-[#f8eeec]">
-      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-[rgba(84,53,24,0.1)] bg-white p-6 lg:block">
-        <Link href="/" className="brand-display text-3xl italic text-[var(--toffee-800)]">originally</Link>
-        <nav className="mt-10 grid gap-2">
+    <main className="min-h-screen bg-[#f6f6f7] text-[#202223]">
+      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-[#e1e3e5] bg-[#fbfbfb] p-4 lg:block">
+        <Link href="/" className="brand-display block px-3 py-2 text-3xl italic text-[var(--toffee-800)]">originally</Link>
+        <nav className="mt-7 grid gap-1">
           {nav.map(([label, href]) => (
-            <Link key={href} href={href} className="rounded-2xl px-4 py-3 text-sm font-black text-[var(--ink-700)] hover:bg-[var(--blush-100)]">
+            <Link key={href} href={href} className="rounded-lg px-3 py-2 text-sm font-semibold text-[#303030] hover:bg-[#f1f1f1]">
               {label}
             </Link>
           ))}
         </nav>
-        <form action={signOutAction} className="absolute bottom-6 left-6 right-6">
+        <form action={signOutAction} className="absolute bottom-5 left-4 right-4">
           <button className="btn btn-ghost w-full text-sm">Sair</button>
         </form>
       </aside>
       <section className="lg:pl-64">
-        <div className="mx-auto max-w-6xl px-5 py-8 lg:px-8">{children}</div>
+        <header className="sticky top-0 z-40 border-b border-[#e1e3e5] bg-[#fbfbfb]/95 px-4 py-3 backdrop-blur lg:hidden">
+          <div className="flex items-center justify-between gap-3">
+            <Link href="/" className="brand-display text-2xl italic text-[var(--toffee-800)]">originally</Link>
+            <form action={signOutAction}>
+              <button className="btn btn-ghost text-xs">Sair</button>
+            </form>
+          </div>
+          <nav className="mt-3 flex gap-2 overflow-x-auto pb-1">
+            {nav.map(([label, href]) => (
+              <Link key={href} href={href} className="whitespace-nowrap rounded-lg bg-white px-3 py-2 text-sm font-semibold text-[#303030]">
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </header>
+        <div className="mx-auto max-w-[1240px] px-5 py-7 lg:px-8">{children}</div>
       </section>
     </main>
   );

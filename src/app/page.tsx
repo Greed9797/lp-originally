@@ -12,16 +12,17 @@ import {
   Star,
 } from "lucide-react";
 import { formatProductPrice } from "@/lib/format";
-import { buildProductMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
-import { getCategories, getHomeSlots, getProducts, getSettings } from "@/lib/data";
-import type { Category, Product, SiteSettings } from "@/lib/types";
+import { buildTrackedWhatsAppUrl } from "@/lib/whatsapp";
+import { getCategories, getHomeSlots, getInstagramTiles, getProducts, getSettings } from "@/lib/data";
+import type { Category, InstagramTile, Product, SiteSettings } from "@/lib/types";
 
 export default async function Home() {
-  const [settings, products, categories, slots] = await Promise.all([
+  const [settings, products, categories, slots, instagramTiles] = await Promise.all([
     getSettings(),
     getProducts(),
     getCategories(),
     getHomeSlots(),
+    getInstagramTiles(),
   ]);
 
   const heroProduct = slots.find((slot) => slot.position === "hero")?.product ?? products[0];
@@ -44,15 +45,15 @@ export default async function Home() {
 
   return (
     <main className="storefront">
-      <Hero product={heroProduct} gallery={heroGallery} settings={settings} banner={heroBanner} />
+      <Hero product={heroProduct} gallery={heroGallery} banner={heroBanner} />
       <Marquee />
       <ProductsSection products={displayFeatured} categories={categories} settings={settings} />
       <CollectionFeature product={collectionProduct} settings={settings} />
       <ProcessSection />
       <ReviewsSection />
       <NewsSection products={displayNews} settings={settings} />
-      <InstagramStrip />
-      <Newsletter settings={settings} />
+      <InstagramStrip tiles={instagramTiles} />
+      <Newsletter />
     </main>
   );
 }
@@ -78,16 +79,12 @@ function getHeroBanner(): HeroBannerConfig | null {
 function Hero({
   product,
   gallery,
-  settings,
   banner,
 }: {
   product?: Product;
   gallery: Product[];
-  settings: SiteSettings;
   banner?: HeroBannerConfig | null;
 }) {
-  const message = product ? buildProductMessage({ product, settings }) : settings.whatsapp_default_message;
-
   if (banner) {
     return (
       <section className="hero hero-banner-mode" aria-label="Originally">
@@ -114,7 +111,7 @@ function Hero({
               Ver selecionados <ArrowRight size={18} />
             </a>
             <a
-              href={buildWhatsAppUrl(settings.whatsapp_number, message)}
+              href={buildTrackedWhatsAppUrl({ product, placement: "home", sourcePath: "/" })}
               target="_blank"
               rel="noreferrer"
               className="btn btn-soft"
@@ -255,9 +252,8 @@ function ProductsSection({ products, categories, settings }: { products: Product
   );
 }
 
-function LandingProductCard({ product, settings }: { product: Product; settings: SiteSettings }) {
+function LandingProductCard({ product }: { product: Product; settings: SiteSettings }) {
   const image = product.images[0];
-  const message = buildProductMessage({ product, settings });
   const inStock = product.variants.length === 0 || product.variants.some((variant) => variant.active && variant.stock > 0);
 
   return (
@@ -288,7 +284,7 @@ function LandingProductCard({ product, settings }: { product: Product; settings:
         <div className="product-bottom">
           <strong>{formatProductPrice(product.price_cents)}</strong>
           <a
-            href={buildWhatsAppUrl(settings.whatsapp_number, message)}
+            href={buildTrackedWhatsAppUrl({ product, placement: "home", sourcePath: "/" })}
             target="_blank"
             rel="noreferrer"
             aria-label={`Comprar ${product.name} pelo WhatsApp`}
@@ -301,9 +297,7 @@ function LandingProductCard({ product, settings }: { product: Product; settings:
   );
 }
 
-function CollectionFeature({ product, settings }: { product?: Product; settings: SiteSettings }) {
-  const message = product ? buildProductMessage({ product, settings }) : settings.whatsapp_default_message;
-
+function CollectionFeature({ product }: { product?: Product; settings: SiteSettings }) {
   return (
     <section id="colecao" className="container-shell collection-feature">
       <div className="collection-art">
@@ -329,7 +323,7 @@ function CollectionFeature({ product, settings }: { product?: Product; settings:
             </Link>
           ) : null}
           <a
-            href={buildWhatsAppUrl(settings.whatsapp_number, message)}
+            href={buildTrackedWhatsAppUrl({ product, placement: "collection", sourcePath: "/" })}
             target="_blank"
             rel="noreferrer"
             className="btn btn-ghost"
@@ -451,7 +445,8 @@ function NewsSection({ products, settings }: { products: Product[]; settings: Si
   );
 }
 
-function InstagramStrip() {
+function InstagramStrip({ tiles }: { tiles: InstagramTile[] }) {
+  const visibleTiles = tiles.slice(0, 4);
   return (
     <section className="container-shell instagram-strip" aria-label="Instagram">
       <div>
@@ -459,8 +454,25 @@ function InstagramStrip() {
         <h2>Close em tecido, forma e acabamento.</h2>
       </div>
       <div className="insta-tiles">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="insta-tile">
+        {visibleTiles.map((tile) => {
+          const content = (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={tile.image_url} alt={tile.alt_text || "Instagram Originally"} />
+            </>
+          );
+          return tile.link_url ? (
+            <a key={tile.id} href={tile.link_url} target="_blank" rel="noreferrer" className="insta-tile insta-tile-image">
+              {content}
+            </a>
+          ) : (
+            <div key={tile.id} className="insta-tile insta-tile-image">
+              {content}
+            </div>
+          );
+        })}
+        {Array.from({ length: Math.max(0, 4 - visibleTiles.length) }).map((_, index) => (
+          <div key={`placeholder-${index}`} className="insta-tile">
             <Camera size={24} />
           </div>
         ))}
@@ -469,7 +481,7 @@ function InstagramStrip() {
   );
 }
 
-function Newsletter({ settings }: { settings: SiteSettings }) {
+function Newsletter() {
   return (
     <section className="container-shell newsletter">
       <div>
@@ -478,7 +490,7 @@ function Newsletter({ settings }: { settings: SiteSettings }) {
         <p>Novidades, promocoes exclusivas e mais!</p>
       </div>
       <a
-        href={buildWhatsAppUrl(settings.whatsapp_number, "Oi! Quero entrar no grupo do WhatsApp da Originally.")}
+        href={buildTrackedWhatsAppUrl({ placement: "footer", sourcePath: "/" })}
         target="_blank"
         rel="noreferrer"
         className="btn btn-mint"

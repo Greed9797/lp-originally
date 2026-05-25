@@ -75,6 +75,18 @@ export type SiteSettings = {
   whatsapp_button_label: string;
 };
 
+export type InstagramTile = {
+  id: string;
+  image_url: string;
+  storage_path?: string | null;
+  alt_text?: string | null;
+  link_url?: string | null;
+  sort_order: number;
+  active: boolean;
+  created_at?: string;
+  updated_at?: string;
+};
+
 export type ProductInput = {
   id?: string;
   category_id?: string | null;
@@ -103,4 +115,16 @@ export type ImportRun = {
   errors: Array<{ message: string; context?: string }>;
   started_at: string;
   finished_at?: string | null;
+};
+
+export type WhatsAppContactEvent = {
+  id: string;
+  product_id?: string | null;
+  variant_id?: string | null;
+  placement: string;
+  source_path?: string | null;
+  session_id?: string | null;
+  created_at: string;
+  product?: Pick<Product, "id" | "name" | "slug"> | null;
+  variant?: Pick<ProductVariant, "id" | "size" | "color"> | null;
 };

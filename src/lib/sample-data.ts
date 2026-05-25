@@ -1,4 +1,4 @@
-import type { Category, HomeSlot, Product, SiteSettings } from "./types";
+import type { Category, HomeSlot, InstagramTile, Product, SiteSettings } from "./types";
 
 export const sampleCategories: Category[] = [
   { id: "11111111-1111-4111-8111-111111111111", name: "Roupa", slug: "roupas", description: "Roupas de inverno, sueteres, vestidos e casacos.", sort_order: 1 },
@@ -104,3 +104,5 @@ export const sampleHomeSlots: HomeSlot[] = [
   { id: "h4", position: "novidades", product_id: sampleProducts[3].id, sort_order: 1, product: sampleProducts[3] },
   { id: "h5", position: "colecao", product_id: sampleProducts[2].id, sort_order: 1, product: sampleProducts[2] },
 ];
+
+export const sampleInstagramTiles: InstagramTile[] = [];

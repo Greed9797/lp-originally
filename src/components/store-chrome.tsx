@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import type { SiteSettings } from "@/lib/types";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { buildTrackedWhatsAppUrl } from "@/lib/whatsapp";
 import { WhatsAppFloating } from "./whatsapp-floating";
 
 const institutionalLinks: [string, string][] = [
@@ -42,7 +42,7 @@ export function StoreChrome({ children, settings }: { children: ReactNode; setti
   return (
     <>
       <PromoBar />
-      <StoreHeader settings={settings} />
+      <StoreHeader />
       {children}
       <StoreFooter settings={settings} />
       <WhatsAppFloating settings={settings} />
@@ -60,7 +60,7 @@ function PromoBar() {
   );
 }
 
-function StoreHeader({ settings }: { settings: SiteSettings }) {
+function StoreHeader() {
   return (
     <header className="site-header">
       <div className="container-shell site-nav">
@@ -82,7 +82,7 @@ function StoreHeader({ settings }: { settings: SiteSettings }) {
         <div className="nav-actions">
           <a
             className="icon-button"
-            href={buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)}
+            href={buildTrackedWhatsAppUrl({ placement: "header", sourcePath: "/" })}
             target="_blank"
             rel="noreferrer"
             aria-label="Comprar pelo WhatsApp"
@@ -99,7 +99,7 @@ function StoreFooter({ settings }: { settings: SiteSettings }) {
   const specialLinks: [string, string][] = [
     ["Meus pedidos", "https://www.originallypet.com.br/entrar"],
     ["Entregas", "/"],
-    ["Contate-nos", buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)],
+    ["Contate-nos", buildTrackedWhatsAppUrl({ placement: "footer", sourcePath: "/" })],
     ["Catalogo B2B", "https://www.originallypet.com.br/"],
   ];
   const phoneLabel = formatWhatsAppNumber(settings.whatsapp_number);
@@ -122,7 +122,7 @@ function StoreFooter({ settings }: { settings: SiteSettings }) {
             </Link>
             <p>Fabrica propria de produtos para caes e gatos, com sede em Erechim/RS desde 2002.</p>
             <a
-              href={buildWhatsAppUrl(settings.whatsapp_number, settings.whatsapp_default_message)}
+              href={buildTrackedWhatsAppUrl({ placement: "footer", sourcePath: "/" })}
               target="_blank"
               rel="noreferrer"
               className="footer-phone"

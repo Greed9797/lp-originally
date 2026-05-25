@@ -4,8 +4,8 @@ import { cache } from "react";
 import { notFound } from "next/navigation";
 import { hasSupabaseEnv } from "./supabase/env";
 import { createSupabaseServerClient } from "./supabase/server";
-import { sampleCategories, sampleHomeSlots, sampleProducts, sampleSettings } from "./sample-data";
-import type { Category, HomeSlot, ImportRun, Product, ProductImage, ProductVariant, SiteSettings } from "./types";
+import { sampleCategories, sampleHomeSlots, sampleInstagramTiles, sampleProducts, sampleSettings } from "./sample-data";
+import type { Category, HomeSlot, ImportRun, InstagramTile, Product, ProductImage, ProductVariant, SiteSettings, WhatsAppContactEvent } from "./types";
 
 type ProductRow = Omit<Product, "category" | "images" | "variants"> & {
   categories?: Category | Category[] | null;
@@ -120,3 +120,44 @@ export const getImportRuns = cache(async (limit = 10): Promise<ImportRun[]> => {
   if (error || !data) return [];
   return data as ImportRun[];
 });
+
+export const getInstagramTiles = cache(async (includeInactive = false): Promise<InstagramTile[]> => {
+  if (!hasSupabaseEnv()) return sampleInstagramTiles;
+  const supabase = await createSupabaseServerClient();
+  let query = supabase.from("instagram_tiles").select("*").order("sort_order", { ascending: true });
+  if (!includeInactive) query = query.eq("active", true);
+  const { data, error } = await query;
+  if (error || !data) return sampleInstagramTiles;
+  return data as InstagramTile[];
+});
+
+export const getWhatsAppContactEvents = cache(async (limit = 100): Promise<WhatsAppContactEvent[]> => {
+  if (!hasSupabaseEnv()) return [];
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("whatsapp_contact_events")
+    .select(`
+      id, product_id, variant_id, placement, source_path, session_id, created_at,
+      products(id,name,slug),
+      product_variants(id,size,color)
+    `)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error || !data) return [];
+  return data.map((event) => ({
+    id: event.id,
+    product_id: event.product_id,
+    variant_id: event.variant_id,
+    placement: event.placement,
+    source_path: event.source_path,
+    session_id: event.session_id,
+    created_at: event.created_at,
+    product: normalizeRelated(event.products),
+    variant: normalizeRelated(event.product_variants),
+  })) as WhatsAppContactEvent[];
+});
+
+function normalizeRelated<T>(value: T | T[] | null | undefined): T | null {
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+}
